@@ -8,8 +8,9 @@ import {
   FileText,
   Plug2,
   Globe,
+  LogOut,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   { label: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -22,6 +23,17 @@ const navItems = [
 ];
 
 export function AppSidebar() {
+  const { user, signOut } = useAuth();
+
+  const fullName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuário";
+  const email = user?.email || "";
+  const initials = fullName
+    .split(" ")
+    .slice(0, 2)
+    .map((n: string) => n[0])
+    .join("")
+    .toUpperCase();
+
   return (
     <aside className="flex h-screen w-60 flex-shrink-0 flex-col bg-[hsl(var(--sidebar-background))]">
       {/* Brand */}
@@ -37,7 +49,7 @@ export function AppSidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
-      {navItems.map(({ label, href, icon: Icon }) => (
+        {navItems.map(({ label, href, icon: Icon }) => (
           <NavLink
             key={href}
             to={href}
@@ -54,13 +66,20 @@ export function AppSidebar() {
       {/* Footer */}
       <div className="px-4 py-4 border-t border-[hsl(var(--sidebar-border))]">
         <div className="flex items-center gap-3">
-          <div className="h-7 w-7 rounded-full bg-[hsl(var(--sidebar-accent))] flex items-center justify-center text-xs font-bold text-white">
-            JD
+          <div className="h-7 w-7 rounded-full bg-[hsl(var(--sidebar-accent))] flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
+            {initials}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-white truncate">João Demo</p>
-            <p className="text-[10px] text-[hsl(var(--sidebar-foreground))] opacity-60 truncate">joao@email.com</p>
+            <p className="text-xs font-semibold text-white truncate">{fullName}</p>
+            <p className="text-[10px] text-[hsl(var(--sidebar-foreground))] opacity-60 truncate">{email}</p>
           </div>
+          <button
+            onClick={signOut}
+            title="Sair"
+            className="flex-shrink-0 rounded-md p-1.5 text-[hsl(var(--sidebar-foreground))] opacity-60 hover:opacity-100 hover:bg-[hsl(var(--sidebar-accent))] transition-colors"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+          </button>
         </div>
       </div>
     </aside>

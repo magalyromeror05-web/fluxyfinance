@@ -14,7 +14,116 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      accounts: {
+        Row: {
+          account_name: string
+          balance: number
+          connection_id: string | null
+          created_at: string
+          currency: string
+          id: string
+          institution_name: string
+          last_sync_at: string | null
+          provider_account_id: string | null
+          status: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          account_name: string
+          balance?: number
+          connection_id?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          institution_name: string
+          last_sync_at?: string | null
+          provider_account_id?: string | null
+          status?: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          account_name?: string
+          balance?: number
+          connection_id?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          institution_name?: string
+          last_sync_at?: string | null
+          provider_account_id?: string | null
+          status?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounts_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "connections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      connections: {
+        Row: {
+          consent_expires_at: string | null
+          country: string
+          created_at: string
+          id: string
+          logo: string | null
+          provider: string
+          provider_type: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          consent_expires_at?: string | null
+          country: string
+          created_at?: string
+          id?: string
+          logo?: string | null
+          provider: string
+          provider_type: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          consent_expires_at?: string | null
+          country?: string
+          created_at?: string
+          id?: string
+          logo?: string | null
+          provider?: string
+          provider_type?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
