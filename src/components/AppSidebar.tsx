@@ -7,10 +7,10 @@ import {
   Sliders,
   FileText,
   Plug2,
-  Globe,
   LogOut,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import fluxyLogo from "@/assets/fluxy-logo.png";
 
 const navItems = [
   { label: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -38,11 +38,9 @@ export function AppSidebar() {
     <aside className="flex h-screen w-60 flex-shrink-0 flex-col bg-[hsl(var(--sidebar-background))]">
       {/* Brand */}
       <div className="flex items-center gap-3 px-6 py-6 border-b border-[hsl(var(--sidebar-border))]">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[hsl(var(--sidebar-primary))]">
-          <Globe className="h-4 w-4 text-white" />
-        </div>
+        <img src={fluxyLogo} alt="Fluxy" className="h-8 w-8 rounded-lg object-contain" />
         <div>
-          <p className="text-sm font-bold text-white tracking-tight">AtlasCash</p>
+          <p className="text-sm font-bold text-white tracking-tight">Fluxy</p>
           <p className="text-[10px] text-[hsl(var(--sidebar-foreground))] opacity-60">Multi-moeda</p>
         </div>
       </div>

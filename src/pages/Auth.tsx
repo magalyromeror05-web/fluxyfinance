@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
-import { Globe, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
+import fluxyLogo from "@/assets/fluxy-logo.png";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -80,11 +81,9 @@ export default function Auth() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="mb-8 flex flex-col items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary">
-            <Globe className="h-6 w-6 text-primary-foreground" />
-          </div>
+          <img src={fluxyLogo} alt="Fluxy" className="h-14 w-auto" />
           <div className="text-center">
-            <p className="text-xl font-bold tracking-tight text-foreground">AtlasCash</p>
+            <p className="text-xl font-bold tracking-tight text-foreground">Fluxy</p>
             <p className="text-xs text-muted-foreground">Suas finanças, cada moeda no seu lugar</p>
           </div>
         </div>
