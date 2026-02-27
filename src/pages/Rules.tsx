@@ -15,7 +15,7 @@ function getCategory(id: string) {
 
 export default function Rules() {
   return (
-    <div className="p-8 max-w-3xl mx-auto">
+    <div className="p-4 md:p-8 max-w-3xl mx-auto">
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Regras</h1>

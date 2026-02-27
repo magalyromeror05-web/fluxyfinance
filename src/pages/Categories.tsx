@@ -28,7 +28,7 @@ export default function Categories() {
   const currencies: Currency[] = ["BRL", "USD", "PYG"];
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
+    <div className="p-4 md:p-8 max-w-3xl mx-auto">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">Categorias</h1>
         <p className="text-sm text-muted-foreground mt-1">

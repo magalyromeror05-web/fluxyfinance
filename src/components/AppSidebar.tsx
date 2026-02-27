@@ -22,7 +22,7 @@ const navItems = [
   { label: "Conexões", href: "/conexoes", icon: Plug2 },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
   const { user, signOut } = useAuth();
 
   const fullName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuário";
@@ -52,6 +52,7 @@ export function AppSidebar() {
             key={href}
             to={href}
             end={href === "/"}
+            onClick={onNavigate}
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-accent))] hover:text-white"
             activeClassName="bg-[hsl(var(--sidebar-accent))] text-white"
           >
