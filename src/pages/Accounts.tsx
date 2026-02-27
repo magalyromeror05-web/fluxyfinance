@@ -35,7 +35,7 @@ export default function Accounts() {
   const currencies: Currency[] = ["BRL", "USD", "PYG"];
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
+    <div className="p-4 md:p-8 max-w-4xl mx-auto">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">Contas</h1>
         <p className="text-sm text-muted-foreground mt-1">
@@ -44,7 +44,7 @@ export default function Accounts() {
       </div>
 
       {/* Summary cards */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-6">
         {currencies.map(cur => (
           <div key={cur} className="atlas-card p-4">
             <CurrencyBadge currency={cur} size="sm" />

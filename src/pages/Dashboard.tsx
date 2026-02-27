@@ -143,7 +143,7 @@ export default function Dashboard() {
   const hasExpiring = mockConnections.some(c => c.status === "expiring");
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="p-4 md:p-8 max-w-5xl mx-auto">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">Visão Geral</h1>

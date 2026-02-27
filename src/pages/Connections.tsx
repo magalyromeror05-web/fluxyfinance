@@ -30,7 +30,7 @@ const availableProviders = [
 
 export default function Connections() {
   return (
-    <div className="p-8 max-w-3xl mx-auto">
+    <div className="p-4 md:p-8 max-w-3xl mx-auto">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">Conexões & Integrações</h1>
         <p className="text-sm text-muted-foreground mt-1">
@@ -89,7 +89,7 @@ export default function Connections() {
 
       {/* Available providers */}
       <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Adicionar conexão</h2>
-      <div className="grid grid-cols-2 gap-3 fade-in">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {availableProviders.map(provider => (
           <button
             key={provider.name}
