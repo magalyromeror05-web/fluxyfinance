@@ -8,6 +8,7 @@ import {
   FileText,
   Plug2,
   LogOut,
+  Target,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import fluxyLogo from "@/assets/fluxy-logo.png";
@@ -17,6 +18,7 @@ const navItems = [
   { label: "Contas", href: "/contas", icon: CreditCard },
   { label: "Movimentos", href: "/movimentos", icon: ArrowLeftRight },
   { label: "Categorias", href: "/categorias", icon: Tags },
+  { label: "Orçamentos", href: "/orcamentos", icon: Target },
   { label: "Regras", href: "/regras", icon: Sliders },
   { label: "Contratos", href: "/contratos", icon: FileText },
   { label: "Conexões", href: "/conexoes", icon: Plug2 },

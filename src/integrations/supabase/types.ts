@@ -67,6 +67,45 @@ export type Database = {
           },
         ]
       }
+      budgets: {
+        Row: {
+          amount: number
+          category_id: string | null
+          created_at: string
+          currency: string
+          id: string
+          name: string
+          period: string
+          period_start_day: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          category_id?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          name: string
+          period?: string
+          period_start_day?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category_id?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          name?: string
+          period?: string
+          period_start_day?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       connections: {
         Row: {
           consent_expires_at: string | null
