@@ -163,6 +163,62 @@ export type Database = {
         }
         Relationships: []
       }
+      transactions: {
+        Row: {
+          account_id: string | null
+          amount: number
+          category_id: string | null
+          category_source: string
+          created_at: string
+          currency: string
+          description_raw: string | null
+          id: string
+          institution_name: string | null
+          merchant: string
+          posted_at: string
+          source: string
+          user_id: string
+        }
+        Insert: {
+          account_id?: string | null
+          amount: number
+          category_id?: string | null
+          category_source?: string
+          created_at?: string
+          currency?: string
+          description_raw?: string | null
+          id?: string
+          institution_name?: string | null
+          merchant: string
+          posted_at?: string
+          source?: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string | null
+          amount?: number
+          category_id?: string | null
+          category_source?: string
+          created_at?: string
+          currency?: string
+          description_raw?: string | null
+          id?: string
+          institution_name?: string | null
+          merchant?: string
+          posted_at?: string
+          source?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
