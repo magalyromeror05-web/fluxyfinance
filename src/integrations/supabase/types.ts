@@ -74,8 +74,10 @@ export type Database = {
           created_at: string
           currency: string
           id: string
+          is_recurring: boolean
           name: string
           period: string
+          period_month: string | null
           period_start_day: number
           updated_at: string
           user_id: string
@@ -86,8 +88,10 @@ export type Database = {
           created_at?: string
           currency?: string
           id?: string
+          is_recurring?: boolean
           name: string
           period?: string
+          period_month?: string | null
           period_start_day?: number
           updated_at?: string
           user_id: string
@@ -98,13 +102,53 @@ export type Database = {
           created_at?: string
           currency?: string
           id?: string
+          is_recurring?: boolean
           name?: string
           period?: string
+          period_month?: string | null
           period_start_day?: number
           updated_at?: string
           user_id?: string
         }
         Relationships: []
+      }
+      categories: {
+        Row: {
+          created_at: string
+          icon: string
+          id: string
+          name: string
+          parent_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          icon?: string
+          id?: string
+          name: string
+          parent_id?: string | null
+          type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          icon?: string
+          id?: string
+          name?: string
+          parent_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       connections: {
         Row: {
