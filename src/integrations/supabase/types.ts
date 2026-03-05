@@ -111,7 +111,9 @@ export type Database = {
           consent_expires_at: string | null
           country: string
           created_at: string
+          external_connection_id: string | null
           id: string
+          last_sync_at: string | null
           logo: string | null
           provider: string
           provider_type: string
@@ -122,7 +124,9 @@ export type Database = {
           consent_expires_at?: string | null
           country: string
           created_at?: string
+          external_connection_id?: string | null
           id?: string
+          last_sync_at?: string | null
           logo?: string | null
           provider: string
           provider_type: string
@@ -133,7 +137,9 @@ export type Database = {
           consent_expires_at?: string | null
           country?: string
           created_at?: string
+          external_connection_id?: string | null
           id?: string
+          last_sync_at?: string | null
           logo?: string | null
           provider?: string
           provider_type?: string
@@ -169,14 +175,18 @@ export type Database = {
           amount: number
           category_id: string | null
           category_source: string
+          connection_id: string | null
           created_at: string
           currency: string
           description_raw: string | null
+          external_transaction_id: string | null
           id: string
           institution_name: string | null
           merchant: string
           posted_at: string
+          raw: Json | null
           source: string
+          status: string
           user_id: string
         }
         Insert: {
@@ -184,14 +194,18 @@ export type Database = {
           amount: number
           category_id?: string | null
           category_source?: string
+          connection_id?: string | null
           created_at?: string
           currency?: string
           description_raw?: string | null
+          external_transaction_id?: string | null
           id?: string
           institution_name?: string | null
           merchant: string
           posted_at?: string
+          raw?: Json | null
           source?: string
+          status?: string
           user_id: string
         }
         Update: {
@@ -199,14 +213,18 @@ export type Database = {
           amount?: number
           category_id?: string | null
           category_source?: string
+          connection_id?: string | null
           created_at?: string
           currency?: string
           description_raw?: string | null
+          external_transaction_id?: string | null
           id?: string
           institution_name?: string | null
           merchant?: string
           posted_at?: string
+          raw?: Json | null
           source?: string
+          status?: string
           user_id?: string
         }
         Relationships: [
@@ -215,6 +233,13 @@ export type Database = {
             columns: ["account_id"]
             isOneToOne: false
             referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "connections"
             referencedColumns: ["id"]
           },
         ]
