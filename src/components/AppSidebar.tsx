@@ -10,6 +10,7 @@ import {
   LogOut,
   Target,
   TrendingUp,
+  Heart,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import fluxyLogo from "@/assets/fluxy-logo.png";
@@ -22,6 +23,7 @@ const navItems = [
   { label: "Orçamentos", href: "/orcamentos", icon: Target },
   { label: "Regras", href: "/regras", icon: Sliders },
   { label: "Projeção", href: "/projecao", icon: TrendingUp },
+  { label: "Saúde", href: "/saude-financeira", icon: Heart },
   { label: "Contratos", href: "/contratos", icon: FileText },
   { label: "Conexões", href: "/conexoes", icon: Plug2 },
 ];
