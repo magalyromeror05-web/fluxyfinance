@@ -161,8 +161,8 @@ const MockDashboard = () => (
     {/* Sidebar */}
     <div className="w-[140px] shrink-0 py-5 px-3 hidden sm:flex flex-col gap-1" style={{ background: "linear-gradient(180deg, #1e1b4b, #1a1744)" }}>
       <div className="flex items-center gap-2 px-2 mb-4">
-        <div className="w-6 h-6 rounded-lg" style={{ background: "linear-gradient(135deg, #7C6FF7, #4F46E5)" }} />
-        <span className="text-white/90 text-xs font-bold tracking-wide" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Fluxy</span>
+        <img src={fluxyLogo} alt="Fluxy" className="w-6 h-6 rounded-lg object-contain" />
+        <span className="text-white/90 text-xs font-bold tracking-wide">Fluxy</span>
       </div>
       {["Dashboard", "Contas", "Movimentos", "Categorias", "Orçamentos", "Regras"].map((item, i) => (
         <div key={item} className={`text-[11px] py-1.5 px-2 rounded-md ${i === 0 ? "bg-white/10 text-white" : "text-white/50"}`}>
