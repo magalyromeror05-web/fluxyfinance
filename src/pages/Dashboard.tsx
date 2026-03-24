@@ -13,6 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AiTipsCard } from "@/components/AiTipsCard";
+import { useExchangeRates } from "@/hooks/useExchangeRates";
 import type { FinancialSnapshot } from "@/lib/aiTips";
 
 function CurrencySection({
