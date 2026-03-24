@@ -4,6 +4,7 @@ import {
   CreditCard,
   ArrowLeftRight,
   Landmark,
+  Target,
   Tags,
   Sliders,
   FileText,
