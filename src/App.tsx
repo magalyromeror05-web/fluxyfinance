@@ -19,6 +19,7 @@ import Budgets from "@/pages/Budgets";
 import Projection from "@/pages/Projection";
 import FinancialHealth from "@/pages/FinancialHealth";
 import Auth from "@/pages/Auth";
+import Plans from "@/pages/Plans";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
             {/* Rotas públicas */}
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/planos" element={<Plans />} />
 
             {/* Rotas protegidas */}
             <Route

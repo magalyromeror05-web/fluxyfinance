@@ -11,19 +11,24 @@ import {
   Target,
   TrendingUp,
   Heart,
+  Star,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import fluxyLogo from "@/assets/fluxy-logo.png";
+import { Separator } from "@/components/ui/separator";
 
-const navItems = [
+const mainItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Contas", href: "/contas", icon: CreditCard },
   { label: "Movimentos", href: "/movimentos", icon: ArrowLeftRight },
   { label: "Categorias", href: "/categorias", icon: Tags },
   { label: "Orçamentos", href: "/orcamentos", icon: Target },
-  { label: "Regras", href: "/regras", icon: Sliders },
   { label: "Projeção", href: "/projecao", icon: TrendingUp },
   { label: "Saúde", href: "/saude-financeira", icon: Heart },
+];
+
+const secondaryItems = [
+  { label: "Regras", href: "/regras", icon: Sliders },
   { label: "Contratos", href: "/contratos", icon: FileText },
   { label: "Conexões", href: "/conexoes", icon: Plug2 },
 ];
@@ -40,6 +45,10 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
     .join("")
     .toUpperCase();
 
+  const linkClass =
+    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-accent))] hover:text-white";
+  const activeClass = "bg-[hsl(var(--sidebar-accent))] text-white";
+
   return (
     <aside className="flex h-screen w-60 flex-shrink-0 flex-col bg-[hsl(var(--sidebar-background))]">
       {/* Brand */}
@@ -53,14 +62,30 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
-        {navItems.map(({ label, href, icon: Icon }) => (
+        {mainItems.map(({ label, href, icon: Icon }) => (
           <NavLink
             key={href}
             to={href}
             end={href === "/"}
             onClick={onNavigate}
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-accent))] hover:text-white"
-            activeClassName="bg-[hsl(var(--sidebar-accent))] text-white"
+            className={linkClass}
+            activeClassName={activeClass}
+          >
+            <Icon className="h-4 w-4 flex-shrink-0" />
+            <span>{label}</span>
+          </NavLink>
+        ))}
+
+        <Separator className="!my-3 bg-[hsl(var(--sidebar-border))]" />
+
+        {secondaryItems.map(({ label, href, icon: Icon }) => (
+          <NavLink
+            key={href}
+            to={href}
+            end={href === "/"}
+            onClick={onNavigate}
+            className={linkClass}
+            activeClassName={activeClass}
           >
             <Icon className="h-4 w-4 flex-shrink-0" />
             <span>{label}</span>
@@ -69,7 +94,19 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
       </nav>
 
       {/* Footer */}
-      <div className="px-4 py-4 border-t border-[hsl(var(--sidebar-border))]">
+      <div className="px-4 py-4 border-t border-[hsl(var(--sidebar-border))] space-y-3">
+        {/* Upgrade button */}
+        <NavLink
+          to="/planos"
+          onClick={onNavigate}
+          className="flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-semibold text-white transition-all hover:opacity-90 hover:-translate-y-0.5"
+          style={{ background: "linear-gradient(135deg, hsl(var(--sidebar-primary)), hsl(var(--accent)))" }}
+        >
+          <Star className="h-4 w-4 fill-current" />
+          <span>Upgrade para Pro</span>
+        </NavLink>
+
+        {/* User info */}
         <div className="flex items-center gap-3">
           <div className="h-7 w-7 rounded-full bg-[hsl(var(--sidebar-accent))] flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
             {initials}
