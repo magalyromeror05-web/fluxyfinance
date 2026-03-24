@@ -34,6 +34,7 @@ const mainItems = [
   { label: "Projeção", href: "/projecao", icon: TrendingUp },
   { label: "Saúde", href: "/saude-financeira", icon: Heart },
   { label: "Dicas", href: "/dicas", icon: BookOpen },
+  { label: "Relatórios", href: "/relatorios", icon: BarChart3 },
 ];
 
 const secondaryItems = [
