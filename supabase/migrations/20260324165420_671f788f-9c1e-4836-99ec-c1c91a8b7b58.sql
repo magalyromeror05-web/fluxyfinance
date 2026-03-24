@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS monthly_income_brl numeric DEFAULT 0;

@@ -297,6 +297,7 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          monthly_income_brl: number | null
           onboarding_completed: boolean
         }
         Insert: {
@@ -304,6 +305,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id: string
+          monthly_income_brl?: number | null
           onboarding_completed?: boolean
         }
         Update: {
@@ -311,6 +313,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id?: string
+          monthly_income_brl?: number | null
           onboarding_completed?: boolean
         }
         Relationships: []
