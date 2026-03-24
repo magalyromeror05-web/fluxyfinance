@@ -21,6 +21,7 @@ import { Plus, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { useExchangeRates } from "@/hooks/useExchangeRates";
 
 type TxType = "expense" | "income" | "transfer";
 type Curr = "BRL" | "USD" | "EUR" | "PYG";
