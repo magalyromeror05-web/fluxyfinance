@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAccounts } from "@/hooks/useSupabaseData";
 import { formatCurrency, CURRENCY_LABELS } from "@/types/database";
 import { CurrencyBadge } from "@/components/CurrencyBadge";
+import { useExchangeRates } from "@/hooks/useExchangeRates";
 import { cn } from "@/lib/utils";
 import { RefreshCw, CheckCircle2, AlertTriangle, XCircle, Building2, Plus, PenLine } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
