@@ -13,11 +13,14 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { CurrencyBadge } from "@/components/CurrencyBadge";
 import { formatCurrency, type Currency } from "@/data/mockData";
 import { BENCHMARK_GROUPS, getHealthyPercent } from "@/data/healthyBudget";
+import { getBenchmarkTooltip } from "@/data/financialTips";
 import { Plus, Pencil, Trash2, Target, Wallet, Copy, DollarSign, CheckCircle, AlertTriangle, XCircle } from "lucide-react";
 import { BudgetSpreadsheet } from "@/components/BudgetSpreadsheet";
+import { TipBanner } from "@/components/TipBanner";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { format, endOfMonth, addMonths, subMonths, parse } from "date-fns";
@@ -424,6 +427,8 @@ export default function Budgets() {
         </Button>
       </div>
 
+      <TipBanner page="orcamentos" userContext={{ overBudgetCategories: overBudgetCategories }} />
+
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-6">
           <TabsTrigger value="budgets">Orçamentos</TabsTrigger>
@@ -594,14 +599,25 @@ export default function Budgets() {
                                   </span>
                                 )}
                               </div>
-                              {idealPct ? (
-                                <div className="flex items-center gap-1.5 mt-1">
-                                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/5 border border-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
+                              {idealPct ? (() => {
+                                const tooltipText = cat ? getBenchmarkTooltip(cat.name) : null;
+                                const badge = (
+                                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/5 border border-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary cursor-help">
                                     🎯 Ideal: até {idealPct}% da renda
                                   </span>
-                                  {healthRatio !== null && healthRatio > 100 && <span className="text-[10px] text-amber-600 font-medium">↑ {Math.round(healthRatio - 100)}% acima</span>}
-                                </div>
-                              ) : monthlyIncome <= 0 && cur === "BRL" ? (
+                                );
+                                return (
+                                  <div className="flex items-center gap-1.5 mt-1">
+                                    {tooltipText ? (
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>{badge}</TooltipTrigger>
+                                        <TooltipContent className="max-w-xs text-xs">{tooltipText}</TooltipContent>
+                                      </Tooltip>
+                                    ) : badge}
+                                    {healthRatio !== null && healthRatio > 100 && <span className="text-[10px] text-amber-600 font-medium">↑ {Math.round(healthRatio - 100)}% acima</span>}
+                                  </div>
+                                );
+                              })() : monthlyIncome <= 0 && cur === "BRL" ? (
                                 <p className="text-[10px] text-muted-foreground mt-1">Configure sua renda para ver o % saudável</p>
                               ) : null}
                             </div>

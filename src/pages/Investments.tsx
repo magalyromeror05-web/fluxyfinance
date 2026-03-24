@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { TipBanner } from "@/components/TipBanner";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
@@ -197,6 +198,8 @@ export default function Investments() {
           <Plus className="h-4 w-4" /> Registrar investimento
         </Button>
       </div>
+
+      <TipBanner page="investimentos" userContext={{ hasEmergencyFund: emergencyFund > 0 }} />
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">

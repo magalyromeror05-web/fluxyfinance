@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AiTipsCard } from "@/components/AiTipsCard";
+import { TipBanner } from "@/components/TipBanner";
 import { cn } from "@/lib/utils";
 import type { FinancialSnapshot } from "@/lib/aiTips";
 
@@ -170,6 +171,8 @@ export default function FinancialHealth() {
           Score calculado com base na sua poupança, orçamentos, diversificação e contas.
         </p>
       </div>
+
+      <TipBanner page="saude-financeira" userContext={{ healthScore: score }} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <Card>

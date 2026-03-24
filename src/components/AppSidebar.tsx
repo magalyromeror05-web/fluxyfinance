@@ -14,6 +14,7 @@ import {
   TrendingUp,
   Heart,
   Star,
+  BookOpen,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import fluxyLogo from "@/assets/fluxy-logo.png";
@@ -29,6 +30,7 @@ const mainItems = [
   { label: "Simulador", href: "/simulador", icon: Calculator },
   { label: "Projeção", href: "/projecao", icon: TrendingUp },
   { label: "Saúde", href: "/saude-financeira", icon: Heart },
+  { label: "Dicas", href: "/dicas", icon: BookOpen },
 ];
 
 const secondaryItems = [
