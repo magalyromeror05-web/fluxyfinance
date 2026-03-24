@@ -206,6 +206,30 @@ function formatVal(amount: number, currency: string) {
   return `${sym} ${amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`;
 }
 
+export async function checkMonthlySummary(userId: string) {
+  const now = new Date();
+  const day = now.getDate();
+  if (day > 3) return; // only check on days 1-3
+
+  const prevMonth = now.getMonth() === 0 ? 12 : now.getMonth();
+  const prevYear = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
+  const monthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const monthNames = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  const prevMonthLabel = `${monthNames[prevMonth - 1]} ${prevYear}`;
+
+  const exists = await notificationExists(userId, "monthly_summary", "month", monthStr, monthStr);
+  if (!exists) {
+    await supabase.from("notifications").insert({
+      user_id: userId,
+      type: "monthly_summary",
+      title: `📊 Seu relatório de ${prevMonthLabel} está disponível`,
+      message: `Confira o resumo completo do mês passado com gráficos e análises.`,
+      action_url: "/relatorios",
+      metadata: { month: monthStr },
+    });
+  }
+}
+
 export async function runAllNotificationChecks(userId: string) {
   if (!shouldRunNotificationChecks()) return;
   try {
@@ -214,6 +238,7 @@ export async function runAllNotificationChecks(userId: string) {
       checkConnectionExpiring(userId),
       checkBillsDue(userId),
       checkGoalAlerts(userId),
+      checkMonthlySummary(userId),
     ]);
   } finally {
     markNotificationCheckDone();
