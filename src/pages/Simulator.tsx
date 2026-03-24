@@ -324,7 +324,7 @@ export default function Simulator() {
               </div>
               <div>
                 <Label>Moeda</Label>
-                <Select value={simCurrency} onValueChange={v => setSimCurrency(v as Currency)}>
+                <Select value={simCurrency} onValueChange={v => setSimCurrency(v as SimCurrency)}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {currencies.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
