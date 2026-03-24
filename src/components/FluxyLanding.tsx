@@ -168,7 +168,7 @@ const MockDashboard = () => (
     <div className="w-[140px] shrink-0 py-5 px-3 hidden sm:flex flex-col gap-1" style={{ background: "linear-gradient(180deg, #1e1b4b, #1a1744)" }}>
       <div className="flex items-center gap-2 px-2 mb-4">
         <div className="w-6 h-6 rounded-lg" style={{ background: "linear-gradient(135deg, #7C6FF7, #4F46E5)" }} />
-        <span className="text-white/90 text-xs font-bold tracking-wide" style={{ fontFamily: "'Syne', sans-serif" }}>Fluxy</span>
+        <span className="text-white/90 text-xs font-bold tracking-wide" style={{ fontFamily: "'Inter', sans-serif" }}>Fluxy</span>
       </div>
       {["Dashboard", "Contas", "Movimentos", "Categorias", "Orçamentos", "Regras"].map((item, i) => (
         <div key={item} className={`text-[11px] py-1.5 px-2 rounded-md ${i === 0 ? "bg-white/10 text-white" : "text-white/50"}`}>
@@ -274,7 +274,7 @@ export default function FluxyLanding() {
           <div className="inline-flex items-center gap-2 rounded-full border border-[#a78bfa]/30 bg-white/70 px-4 py-1.5 text-xs font-medium text-[#7C6FF7] mb-6 backdrop-blur">
             {t.hero.badge[lang]}
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6" style={{ fontFamily: "'Syne', sans-serif" }}>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6" style={{ fontFamily: "'Inter', sans-serif" }}>
             <span className="text-[#1e1b4b]">{t.hero.heading1[lang]}</span>
             <br />
             <span style={{ background: "linear-gradient(135deg, #7C6FF7, #4F46E5)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -310,7 +310,7 @@ export default function FluxyLanding() {
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {t.stats.items.map((s, i) => (
             <div key={i}>
-              <div className="text-3xl sm:text-4xl font-extrabold text-[#a78bfa] mb-1" style={{ fontFamily: "'Syne', sans-serif" }}>{s.value}</div>
+              <div className="text-3xl sm:text-4xl font-extrabold text-[#a78bfa] mb-1" style={{ fontFamily: "'Inter', sans-serif" }}>{s.value}</div>
               <div className="text-sm text-white/60">{s.label[lang]}</div>
             </div>
           ))}
@@ -320,7 +320,7 @@ export default function FluxyLanding() {
       {/* ─── FEATURES ─── */}
       <section id="features" className="py-20 px-4 bg-white">
         <div className="max-w-5xl mx-auto text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1e1b4b] mb-3" style={{ fontFamily: "'Syne', sans-serif" }}>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1e1b4b] mb-3" style={{ fontFamily: "'Inter', sans-serif" }}>
             {t.features.title[lang]}
           </h2>
           <p className="text-[#1e1b4b]/50">{t.features.subtitle[lang]}</p>
@@ -346,7 +346,7 @@ export default function FluxyLanding() {
             <span className="inline-block rounded-full bg-[#7C6FF7]/20 text-[#a78bfa] text-xs font-semibold px-3 py-1 mb-4">
               {t.highlight.badge[lang]}
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4" style={{ fontFamily: "'Syne', sans-serif" }}>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4" style={{ fontFamily: "'Inter', sans-serif" }}>
               {t.highlight.title[lang]}
             </h2>
             <p className="text-[#a78bfa]/80 text-base leading-relaxed max-w-md mx-auto lg:mx-0">
@@ -362,7 +362,7 @@ export default function FluxyLanding() {
       {/* ─── PRICING ─── */}
       <section id="pricing" className="py-20 px-4 bg-[#f8f7ff]">
         <div className="max-w-5xl mx-auto text-center mb-10">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1e1b4b] mb-3" style={{ fontFamily: "'Syne', sans-serif" }}>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1e1b4b] mb-3" style={{ fontFamily: "'Inter', sans-serif" }}>
             {t.pricing.title[lang]}
           </h2>
           <p className="text-[#1e1b4b]/50 mb-6">{t.pricing.subtitle[lang]}</p>
@@ -403,10 +403,10 @@ export default function FluxyLanding() {
                     {t.pricing.popular[lang]}
                   </span>
                 )}
-                <h3 className="text-xl font-bold text-[#1e1b4b] mb-1" style={{ fontFamily: "'Syne', sans-serif" }}>{name}</h3>
+                <h3 className="text-xl font-bold text-[#1e1b4b] mb-1" style={{ fontFamily: "'Inter', sans-serif" }}>{name}</h3>
                 <p className="text-sm text-[#1e1b4b]/50 mb-4">{plan.desc[lang]}</p>
                 <div className="mb-5">
-                  <span className="text-4xl font-extrabold text-[#1e1b4b]" style={{ fontFamily: "'Syne', sans-serif" }}>
+                  <span className="text-4xl font-extrabold text-[#1e1b4b]" style={{ fontFamily: "'Inter', sans-serif" }}>
                     {price === "0" ? "R$ 0" : `R$ ${price}`}
                   </span>
                   <span className="text-sm text-[#1e1b4b]/40 ml-1">{price !== "0" ? suffix : ""}</span>
@@ -448,7 +448,7 @@ export default function FluxyLanding() {
       {/* ─── FAQ ─── */}
       <section id="faq" className="py-20 px-4 bg-white">
         <div className="max-w-[720px] mx-auto">
-          <h2 className="text-3xl font-extrabold text-[#1e1b4b] text-center mb-10" style={{ fontFamily: "'Syne', sans-serif" }}>
+          <h2 className="text-3xl font-extrabold text-[#1e1b4b] text-center mb-10" style={{ fontFamily: "'Inter', sans-serif" }}>
             {t.faq.title[lang]}
           </h2>
           <Accordion type="single" collapsible className="space-y-3">
@@ -470,7 +470,7 @@ export default function FluxyLanding() {
       <section className="py-20 px-4" style={{ background: "linear-gradient(135deg, #312e81, #4F46E5, #7C6FF7)" }}>
         <div className="max-w-2xl mx-auto text-center">
           <FluxyLogo className="h-10 text-white mx-auto mb-6" />
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4" style={{ fontFamily: "'Syne', sans-serif" }}>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4" style={{ fontFamily: "'Inter', sans-serif" }}>
             {t.ctaSection.title[lang]}
           </h2>
           <p className="text-white/60 mb-8">{t.ctaSection.subtitle[lang]}</p>
