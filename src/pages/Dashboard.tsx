@@ -4,11 +4,14 @@ import { CURRENCY_LABELS, formatCurrency } from "@/types/database";
 import type { DbAccount, DbTransaction } from "@/types/database";
 import { CurrencyBadge } from "@/components/CurrencyBadge";
 import { CategorySourceBadge } from "@/components/CategorySourceBadge";
-import { TrendingUp, TrendingDown, RefreshCw, Bell, AlertTriangle, Plus } from "lucide-react";
+import { TrendingUp, TrendingDown, RefreshCw, Bell, AlertTriangle, Plus, Target } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { AiTipsCard } from "@/components/AiTipsCard";
 import type { FinancialSnapshot } from "@/lib/aiTips";
 
