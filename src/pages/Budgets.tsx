@@ -109,7 +109,23 @@ export default function Budgets() {
 
   useEffect(() => { if (user) fetchAll(); }, [user]);
 
-  const expenseCategories = categories.filter(c => c.type === "expense" && !c.parent_id);
+  // Build hierarchical category list: parents first, then children indented
+  const hierarchicalExpenseCategories = useMemo(() => {
+    const parents = categories.filter(c => c.type === "expense" && !c.parent_id).sort((a, b) => a.name.localeCompare(b.name));
+    const result: (DbCategory & { isChild: boolean })[] = [];
+    for (const p of parents) {
+      result.push({ ...p, isChild: false });
+      const children = categories.filter(c => c.parent_id === p.id).sort((a, b) => a.name.localeCompare(b.name));
+      for (const ch of children) {
+        result.push({ ...ch, isChild: true });
+      }
+    }
+    return result;
+  }, [categories]);
+
+  const parentCategoriesWithChildren = useMemo(() => {
+    return new Set(categories.filter(c => c.parent_id).map(c => c.parent_id!));
+  }, [categories]);
 
   const getSpentForBudget = (budget: Budget): number => {
     const catIds = budget.category_id
