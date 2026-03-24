@@ -35,6 +35,7 @@ const App = () => (
             {/* Rotas públicas */}
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/planos" element={<Plans />} />
 
             {/* Rotas protegidas */}
             <Route
