@@ -8,6 +8,7 @@ import {
   Tags,
   Sliders,
   FileText,
+  BarChart3,
   Plug2,
   LogOut,
   Calculator,
