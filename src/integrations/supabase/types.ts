@@ -291,6 +291,57 @@ export type Database = {
         }
         Relationships: []
       }
+      investments: {
+        Row: {
+          created_at: string
+          currency: string
+          current_value: number
+          expected_return_pct: number | null
+          id: string
+          institution: string | null
+          invested_amount: number
+          is_emergency_fund: boolean | null
+          maturity_date: string | null
+          name: string
+          notes: string | null
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          current_value: number
+          expected_return_pct?: number | null
+          id?: string
+          institution?: string | null
+          invested_amount: number
+          is_emergency_fund?: boolean | null
+          maturity_date?: string | null
+          name: string
+          notes?: string | null
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          current_value?: number
+          expected_return_pct?: number | null
+          id?: string
+          institution?: string | null
+          invested_amount?: number
+          is_emergency_fund?: boolean | null
+          maturity_date?: string | null
+          name?: string
+          notes?: string | null
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
