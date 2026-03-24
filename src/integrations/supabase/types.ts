@@ -73,6 +73,7 @@ export type Database = {
           category_id: string | null
           created_at: string
           currency: string
+          healthy_pct: number | null
           id: string
           is_recurring: boolean
           name: string
@@ -87,6 +88,7 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           currency?: string
+          healthy_pct?: number | null
           id?: string
           is_recurring?: boolean
           name: string
@@ -101,6 +103,7 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           currency?: string
+          healthy_pct?: number | null
           id?: string
           is_recurring?: boolean
           name?: string
@@ -152,6 +155,7 @@ export type Database = {
       }
       connections: {
         Row: {
+          accounts_count: number | null
           consent_expires_at: string | null
           country: string
           created_at: string
@@ -165,6 +169,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          accounts_count?: number | null
           consent_expires_at?: string | null
           country: string
           created_at?: string
@@ -178,6 +183,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          accounts_count?: number | null
           consent_expires_at?: string | null
           country?: string
           created_at?: string
@@ -188,6 +194,99 @@ export type Database = {
           provider?: string
           provider_type?: string
           status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      contract_installments: {
+        Row: {
+          amount: number
+          contract_id: string
+          due_date: string
+          id: string
+          number: number
+          status: string | null
+          transaction_id: string | null
+        }
+        Insert: {
+          amount: number
+          contract_id: string
+          due_date: string
+          id?: string
+          number: number
+          status?: string | null
+          transaction_id?: string | null
+        }
+        Update: {
+          amount?: number
+          contract_id?: string
+          due_date?: string
+          id?: string
+          number?: number
+          status?: string | null
+          transaction_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_installments_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contract_installments_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contracts: {
+        Row: {
+          created_at: string | null
+          currency: string
+          first_due_date: string | null
+          id: string
+          installments: number | null
+          interest_rate: number | null
+          lender: string | null
+          notes: string | null
+          principal_amount: number
+          rate_type: string | null
+          status: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          currency?: string
+          first_due_date?: string | null
+          id?: string
+          installments?: number | null
+          interest_rate?: number | null
+          lender?: string | null
+          notes?: string | null
+          principal_amount: number
+          rate_type?: string | null
+          status?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          currency?: string
+          first_due_date?: string | null
+          id?: string
+          installments?: number | null
+          interest_rate?: number | null
+          lender?: string | null
+          notes?: string | null
+          principal_amount?: number
+          rate_type?: string | null
+          status?: string | null
+          title?: string
           user_id?: string
         }
         Relationships: []
@@ -212,6 +311,47 @@ export type Database = {
           id?: string
         }
         Relationships: []
+      }
+      rules: {
+        Row: {
+          category_id: string | null
+          created_at: string | null
+          id: string
+          match_type: string
+          match_value: string
+          priority: number | null
+          usage_count: number | null
+          user_id: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string | null
+          id?: string
+          match_type: string
+          match_value: string
+          priority?: number | null
+          usage_count?: number | null
+          user_id: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string | null
+          id?: string
+          match_type?: string
+          match_value?: string
+          priority?: number | null
+          usage_count?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rules_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       transactions: {
         Row: {
