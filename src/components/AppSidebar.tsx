@@ -21,6 +21,7 @@ const navItems = [
   { label: "Categorias", href: "/categorias", icon: Tags },
   { label: "Orçamentos", href: "/orcamentos", icon: Target },
   { label: "Regras", href: "/regras", icon: Sliders },
+  { label: "Projeção", href: "/projecao", icon: TrendingUp },
   { label: "Contratos", href: "/contratos", icon: FileText },
   { label: "Conexões", href: "/conexoes", icon: Plug2 },
 ];
