@@ -21,6 +21,7 @@ import Simulator from "@/pages/Simulator";
 import Projection from "@/pages/Projection";
 import FinancialHealth from "@/pages/FinancialHealth";
 import FinancialTips from "@/pages/FinancialTips";
+import Notifications from "@/pages/Notifications";
 import Auth from "@/pages/Auth";
 import Plans from "@/pages/Plans";
 import NotFound from "./pages/NotFound";
@@ -64,6 +65,7 @@ const App = () => (
               <Route path="/regras" element={<Rules />} />
               <Route path="/contratos" element={<Contracts />} />
               <Route path="/conexoes" element={<Connections />} />
+              <Route path="/notificacoes" element={<Notifications />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />
