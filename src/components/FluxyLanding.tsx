@@ -147,20 +147,13 @@ const t = {
   },
 };
 
-const FluxyLogo = ({ className = "h-8" }: { className?: string }) => (
-  <svg viewBox="0 0 120 32" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="fluxy-grad" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#7C6FF7" />
-        <stop offset="100%" stopColor="#4F46E5" />
-      </linearGradient>
-    </defs>
-    <circle cx="16" cy="16" r="14" fill="url(#fluxy-grad)" />
-    <path d="M10 12h12M10 16h8M10 20h10" stroke="white" strokeWidth="2" strokeLinecap="round" />
-    <text x="38" y="23" fontFamily="'Plus Jakarta Sans', sans-serif" fontWeight="800" fontSize="20" fill="currentColor">
+const FluxyLogo = ({ className = "h-8", textColor }: { className?: string; textColor?: string }) => (
+  <div className={`flex items-center gap-2.5 ${className}`}>
+    <img src={fluxyLogo} alt="Fluxy" className="h-full w-auto rounded-lg object-contain" />
+    <span className={`font-extrabold text-lg tracking-tight ${textColor || "text-[#1e1b4b]"}`}>
       Fluxy
-    </text>
-  </svg>
+    </span>
+  </div>
 );
 
 const MockDashboard = () => (
