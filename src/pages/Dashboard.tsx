@@ -20,10 +20,12 @@ function CurrencySection({
   currency,
   accounts,
   transactions,
+  convert,
 }: {
   currency: string;
   accounts: DbAccount[];
   transactions: DbTransaction[];
+  convert: (amount: number, from: string, to: string) => number;
 }) {
   const currencyAccounts = accounts.filter((a) => a.currency === currency);
   const currencyTxs = transactions.filter((t) => t.currency === currency);
