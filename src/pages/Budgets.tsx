@@ -427,6 +427,8 @@ export default function Budgets() {
         </Button>
       </div>
 
+      <TipBanner page="orcamentos" userContext={{ overBudgetCategories: overBudgetCategories }} />
+
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-6">
           <TabsTrigger value="budgets">Orçamentos</TabsTrigger>
