@@ -43,7 +43,8 @@ const SIM_TYPES = [
   { value: "custom", label: "✏️ Personalizado", icon: Pencil },
 ];
 
-const currencies: Currency[] = ["BRL", "USD", "EUR", "PYG"];
+const currencies = ["BRL", "USD", "EUR", "PYG"] as const;
+type SimCurrency = (typeof currencies)[number];
 
 export default function Simulator() {
   const { user } = useAuth();
