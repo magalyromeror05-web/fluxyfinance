@@ -427,6 +427,7 @@ export default function Budgets() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-6">
           <TabsTrigger value="budgets">Orçamentos</TabsTrigger>
+          <TabsTrigger value="spreadsheet">Planilha</TabsTrigger>
           <TabsTrigger value="realized">Realizado</TabsTrigger>
         </TabsList>
 
