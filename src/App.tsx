@@ -23,6 +23,7 @@ import FinancialHealth from "@/pages/FinancialHealth";
 import FinancialTips from "@/pages/FinancialTips";
 import Notifications from "@/pages/Notifications";
 import Goals from "@/pages/Goals";
+import Reports from "@/pages/Reports";
 import Auth from "@/pages/Auth";
 import Plans from "@/pages/Plans";
 import NotFound from "./pages/NotFound";
@@ -64,6 +65,7 @@ const App = () => (
               <Route path="/projecao" element={<Projection />} />
               <Route path="/saude-financeira" element={<FinancialHealth />} />
               <Route path="/dicas" element={<FinancialTips />} />
+              <Route path="/relatorios" element={<Reports />} />
               <Route path="/regras" element={<Rules />} />
               <Route path="/contratos" element={<Contracts />} />
               <Route path="/conexoes" element={<Connections />} />
