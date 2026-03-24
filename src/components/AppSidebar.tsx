@@ -9,6 +9,7 @@ import {
   Plug2,
   LogOut,
   Target,
+  TrendingUp,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import fluxyLogo from "@/assets/fluxy-logo.png";
