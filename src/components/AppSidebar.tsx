@@ -30,6 +30,7 @@ const mainItems = [
   { label: "Simulador", href: "/simulador", icon: Calculator },
   { label: "Projeção", href: "/projecao", icon: TrendingUp },
   { label: "Saúde", href: "/saude-financeira", icon: Heart },
+  { label: "Dicas", href: "/dicas", icon: BookOpen },
 ];
 
 const secondaryItems = [
