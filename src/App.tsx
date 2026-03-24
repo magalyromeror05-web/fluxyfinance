@@ -22,6 +22,7 @@ import Projection from "@/pages/Projection";
 import FinancialHealth from "@/pages/FinancialHealth";
 import FinancialTips from "@/pages/FinancialTips";
 import Notifications from "@/pages/Notifications";
+import Goals from "@/pages/Goals";
 import Auth from "@/pages/Auth";
 import Plans from "@/pages/Plans";
 import NotFound from "./pages/NotFound";
@@ -54,6 +55,7 @@ const App = () => (
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/contas" element={<Accounts />} />
               <Route path="/investimentos" element={<Investments />} />
+              <Route path="/metas" element={<Goals />} />
               <Route path="/movimentos" element={<Transactions />} />
               <Route path="/movimentos" element={<Transactions />} />
               <Route path="/categorias" element={<Categories />} />

@@ -141,6 +141,71 @@ export async function checkBillsDue(userId: string) {
   }
 }
 
+export async function checkGoalAlerts(userId: string) {
+  const monthStr = new Date().toISOString().slice(0, 7);
+  const { data: goals } = await supabase
+    .from("goals")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("status", "active");
+
+  if (!goals?.length) return;
+
+  for (const goal of goals) {
+    const pct = Number(goal.target_amount) > 0 ? (Number(goal.current_amount) / Number(goal.target_amount)) * 100 : 0;
+
+    if (pct >= 100) {
+      const exists = await notificationExists(userId, "goal_reached", "goal_id", goal.id, monthStr);
+      if (!exists) {
+        await supabase.from("notifications").insert({
+          user_id: userId,
+          type: "goal_reached",
+          title: `🏆 Parabéns! Meta "${goal.title}" concluída!`,
+          message: `Você atingiu ${formatVal(Number(goal.current_amount), goal.currency)} de ${formatVal(Number(goal.target_amount), goal.currency)}.`,
+          action_url: "/metas",
+          metadata: { goal_id: goal.id },
+        });
+        await supabase.from("goals").update({ status: "completed" }).eq("id", goal.id);
+      }
+    } else if (pct >= 50 && pct < 51) {
+      const exists = await notificationExists(userId, "goal_reached", "goal_id", goal.id + "_50", monthStr);
+      if (!exists) {
+        await supabase.from("notifications").insert({
+          user_id: userId,
+          type: "goal_reached",
+          title: `🎯 Você está na metade de "${goal.title}"!`,
+          message: `Já são ${formatVal(Number(goal.current_amount), goal.currency)} de ${formatVal(Number(goal.target_amount), goal.currency)}.`,
+          action_url: "/metas",
+          metadata: { goal_id: goal.id + "_50" },
+        });
+      }
+    }
+
+    // Deadline approaching
+    if (goal.target_date && pct < 80) {
+      const daysLeft = Math.ceil((new Date(goal.target_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+      if (daysLeft <= 30 && daysLeft > 0) {
+        const exists = await notificationExists(userId, "goal_reached", "goal_id", goal.id + "_deadline", monthStr);
+        if (!exists) {
+          await supabase.from("notifications").insert({
+            user_id: userId,
+            type: "goal_reached",
+            title: `⚠️ "${goal.title}" vence em ${daysLeft} dias`,
+            message: `A meta está em ${Math.round(pct)}% e vence em breve.`,
+            action_url: "/metas",
+            metadata: { goal_id: goal.id + "_deadline" },
+          });
+        }
+      }
+    }
+  }
+}
+
+function formatVal(amount: number, currency: string) {
+  const sym = currency === "BRL" ? "R$" : currency === "USD" ? "US$" : currency;
+  return `${sym} ${amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`;
+}
+
 export async function runAllNotificationChecks(userId: string) {
   if (!shouldRunNotificationChecks()) return;
   try {
@@ -148,6 +213,7 @@ export async function runAllNotificationChecks(userId: string) {
       checkBudgetAlerts(userId),
       checkConnectionExpiring(userId),
       checkBillsDue(userId),
+      checkGoalAlerts(userId),
     ]);
   } finally {
     markNotificationCheckDone();

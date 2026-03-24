@@ -4,11 +4,14 @@ import { CURRENCY_LABELS, formatCurrency } from "@/types/database";
 import type { DbAccount, DbTransaction } from "@/types/database";
 import { CurrencyBadge } from "@/components/CurrencyBadge";
 import { CategorySourceBadge } from "@/components/CategorySourceBadge";
-import { TrendingUp, TrendingDown, RefreshCw, Bell, AlertTriangle, Plus } from "lucide-react";
+import { TrendingUp, TrendingDown, RefreshCw, Bell, AlertTriangle, Plus, Target } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { AiTipsCard } from "@/components/AiTipsCard";
 import type { FinancialSnapshot } from "@/lib/aiTips";
 
@@ -134,22 +137,56 @@ function DashboardSkeleton() {
   );
 }
 
+function GoalsWidget({ userId }: { userId: string }) {
+  const { data: goals = [] } = useQuery({
+    queryKey: ["goals", userId],
+    queryFn: async () => {
+      const { data } = await supabase.from("goals").select("*").eq("status", "active").order("created_at", { ascending: false }).limit(3);
+      return data ?? [];
+    },
+    enabled: !!userId,
+  });
+
+  if (goals.length === 0) return null;
+
+  return (
+    <section className="fade-in">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Target className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm font-semibold text-muted-foreground uppercase tracking-widest">Minhas Metas</span>
+        </div>
+        <Link to="/metas" className="text-xs text-primary hover:underline">Ver todas</Link>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {goals.map((g: any) => {
+          const pct = Number(g.target_amount) > 0 ? (Number(g.current_amount) / Number(g.target_amount)) * 100 : 0;
+          return (
+            <div key={g.id} className="atlas-card p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-lg">{g.icon || "🎯"}</span>
+                <p className="text-sm font-medium text-foreground truncate">{g.title}</p>
+              </div>
+              <div className="flex items-center justify-between text-xs text-muted-foreground mb-1.5">
+                <span>{formatCurrency(Number(g.current_amount), g.currency)}</span>
+                <span>{Math.min(pct, 100).toFixed(0)}%</span>
+              </div>
+              <Progress value={Math.min(pct, 100)} className="h-1.5" />
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 export default function Dashboard() {
   const { user } = useAuth();
   const { accounts, transactions, connections, loading } = useSupabaseData();
 
   const hasExpiring = connections.some((c) => c.status === "expiring");
-
-  // Get unique currencies from user's accounts
   const currencies = [...new Set(accounts.map((a) => a.currency))];
-
-  // Find latest sync
-  const lastSync = accounts
-    .map((a) => a.last_sync_at)
-    .filter(Boolean)
-    .sort()
-    .reverse()[0];
-
+  const lastSync = accounts.map((a) => a.last_sync_at).filter(Boolean).sort().reverse()[0];
   const syncLabel = lastSync
     ? new Date(lastSync).toLocaleString("pt-BR", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short" })
     : null;
@@ -168,9 +205,7 @@ export default function Dashboard() {
           <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
           <div>
             <p className="text-sm font-semibold text-amber-800">Conexão expirando em breve</p>
-            <p className="text-xs text-amber-700 mt-0.5">
-              Reconecte para manter o sync.
-            </p>
+            <p className="text-xs text-amber-700 mt-0.5">Reconecte para manter o sync.</p>
           </div>
         </div>
       )}
@@ -202,13 +237,10 @@ export default function Dashboard() {
       ) : (
         <div className="space-y-10">
           {currencies.map((currency) => (
-            <CurrencySection
-              key={currency}
-              currency={currency}
-              accounts={accounts}
-              transactions={transactions}
-            />
+            <CurrencySection key={currency} currency={currency} accounts={accounts} transactions={transactions} />
           ))}
+
+          {user && <GoalsWidget userId={user.id} />}
 
           {user && transactions.length >= 5 && (
             <AiTipsSection transactions={transactions} userId={user.id} />
