@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   CreditCard,
   ArrowLeftRight,
+  Landmark,
   Tags,
   Sliders,
   FileText,
