@@ -221,6 +221,28 @@ export default function FinancialHealth() {
                   />
                 </div>
               </div>
+
+              {/* Emergency fund metric */}
+              <div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-muted-foreground">Reserva de emergência</span>
+                  <span className={cn("font-semibold",
+                    emergencyMonths >= 6 ? "text-income" : emergencyMonths >= 3 ? "text-amber-600" : "text-destructive"
+                  )}>
+                    {emergencyMonths.toFixed(1)} meses
+                    {emergencyMonths >= 6 ? " 🟢" : emergencyMonths >= 3 ? " 🟡" : " 🔴"}
+                  </span>
+                </div>
+                <div className="h-2 bg-muted rounded-full overflow-hidden">
+                  <div
+                    className={cn("h-full rounded-full transition-all",
+                      emergencyMonths >= 6 ? "bg-income" : emergencyMonths >= 3 ? "bg-amber-500" : "bg-destructive"
+                    )}
+                    style={{ width: `${Math.min((emergencyMonths / 6) * 100, 100)}%` }}
+                  />
+                </div>
+                <p className="text-[10px] text-muted-foreground mt-1">Ideal: 6 meses de despesas</p>
+              </div>
             </div>
           </CardContent>
         </Card>
