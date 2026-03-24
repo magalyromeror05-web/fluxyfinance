@@ -65,7 +65,7 @@ export default function Plans() {
     if (!email.trim()) return;
     setSubmitting(true);
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("waitlist")
         .insert({ email: email.trim(), plan: selectedPlan });
       if (error) throw error;
