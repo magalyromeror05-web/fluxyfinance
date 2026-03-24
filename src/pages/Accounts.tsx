@@ -63,6 +63,7 @@ export default function Accounts() {
   const [filter, setFilter] = useState<Filter>(ALL);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const { convert, stale: ratesStale } = useExchangeRates();
 
   // Form state
   const [form, setForm] = useState({
