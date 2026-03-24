@@ -12,7 +12,16 @@ import {
   Sheet, SheetContent, SheetHeader, SheetTitle,
 } from "@/components/ui/sheet";
 import { Progress } from "@/components/ui/progress";
-import { formatCurrency, type Currency } from "@/data/mockData";
+import { formatCurrency as baseFormatCurrency, type Currency } from "@/data/mockData";
+import { getHealthyPercent } from "@/data/healthyBudget";
+
+// Extended formatter that handles EUR
+function formatCurrency(amount: number, currency: string): string {
+  if (currency === "EUR") {
+    return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "EUR" }).format(amount);
+  }
+  return baseFormatCurrency(amount, currency as Currency);
+}
 import { getHealthyPercent } from "@/data/healthyBudget";
 import {
   Calculator, Plus, Trash2, Archive, Home, CreditCard, Car,
