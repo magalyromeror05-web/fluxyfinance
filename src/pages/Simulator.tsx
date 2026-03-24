@@ -61,7 +61,7 @@ export default function Simulator() {
   // Form
   const [simName, setSimName] = useState("");
   const [simType, setSimType] = useState("custom");
-  const [simCurrency, setSimCurrency] = useState<Currency>("BRL");
+  const [simCurrency, setSimCurrency] = useState<SimCurrency>("BRL");
   const [simCategoryId, setSimCategoryId] = useState<string>("");
   const [simDurationType, setSimDurationType] = useState("indefinite");
   const [simDurationValue, setSimDurationValue] = useState("");
