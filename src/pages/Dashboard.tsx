@@ -189,7 +189,7 @@ function GoalsWidget({ userId }: { userId: string }) {
 export default function Dashboard() {
   const { user } = useAuth();
   const { accounts, transactions, connections, loading } = useSupabaseData();
-
+  const { convert } = useExchangeRates();
   const hasExpiring = connections.some((c) => c.status === "expiring");
   const currencies = [...new Set(accounts.map((a) => a.currency))];
   const lastSync = accounts.map((a) => a.last_sync_at).filter(Boolean).sort().reverse()[0];
