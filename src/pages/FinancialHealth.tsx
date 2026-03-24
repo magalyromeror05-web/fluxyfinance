@@ -1,9 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { useSupabaseData } from "@/hooks/useSupabaseData";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AiTipsCard } from "@/components/AiTipsCard";
+import { cn } from "@/lib/utils";
 import type { FinancialSnapshot } from "@/lib/aiTips";
 
 function ScoreGauge({ score }: { score: number }) {
@@ -78,6 +80,29 @@ export default function FinancialHealth() {
   const { user } = useAuth();
   const { accounts, transactions, connections, loading } = useSupabaseData();
 
+  // Fetch investments and income for emergency fund metric
+  const [emergencyFund, setEmergencyFund] = useState(0);
+  const [monthlyIncome, setMonthlyIncome] = useState(0);
+  const [monthlyExpenses, setMonthlyExpenses] = useState(0);
+
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      const [invRes, profileRes, budgetsRes] = await Promise.all([
+        supabase.from("investments").select("current_value, is_emergency_fund").eq("is_emergency_fund", true),
+        supabase.from("profiles").select("monthly_income_brl").eq("id", user.id).single(),
+        supabase.from("budgets").select("amount").eq("currency", "BRL"),
+      ]);
+      if (invRes.data) {
+        setEmergencyFund((invRes.data as any[]).reduce((s, i) => s + (i.current_value || 0), 0));
+      }
+      if (profileRes.data) setMonthlyIncome((profileRes.data as any).monthly_income_brl || 0);
+      if (budgetsRes.data) setMonthlyExpenses((budgetsRes.data as any[]).reduce((s, b) => s + (b.amount || 0), 0));
+    })();
+  }, [user]);
+
+  const emergencyMonths = monthlyExpenses > 0 ? emergencyFund / monthlyExpenses : (monthlyIncome > 0 ? emergencyFund / monthlyIncome : 0);
+
   const { score, snapshot, breakdown } = useMemo(() => {
     const brlTxs = transactions.filter((t) => t.currency === "BRL");
     const income = brlTxs.filter((t) => t.amount > 0).reduce((s, t) => s + t.amount, 0);
@@ -88,7 +113,6 @@ export default function FinancialHealth() {
     const activeAccounts = accounts.filter((a) => a.status === "active");
     const accountsOkPct = accounts.length > 0 ? activeAccounts.length / accounts.length : 0;
 
-    // Category spending
     const catMap = new Map<string, number>();
     brlTxs
       .filter((t) => t.amount < 0)
@@ -106,8 +130,7 @@ export default function FinancialHealth() {
         pct: income > 0 ? Math.round((amount / income) * 100) : 0,
       }));
 
-    const budgetRespectedPct = 1; // no budget data in this hook, default to 100%
-
+    const budgetRespectedPct = 1;
     const s = calcScore(savingsRate, budgetRespectedPct, currencies.length, accountsOkPct);
 
     const snap: FinancialSnapshot = {
@@ -197,6 +220,28 @@ export default function FinancialHealth() {
                     style={{ width: `${breakdown.accountsOkPct}%` }}
                   />
                 </div>
+              </div>
+
+              {/* Emergency fund metric */}
+              <div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-muted-foreground">Reserva de emergência</span>
+                  <span className={cn("font-semibold",
+                    emergencyMonths >= 6 ? "text-income" : emergencyMonths >= 3 ? "text-amber-600" : "text-destructive"
+                  )}>
+                    {emergencyMonths.toFixed(1)} meses
+                    {emergencyMonths >= 6 ? " 🟢" : emergencyMonths >= 3 ? " 🟡" : " 🔴"}
+                  </span>
+                </div>
+                <div className="h-2 bg-muted rounded-full overflow-hidden">
+                  <div
+                    className={cn("h-full rounded-full transition-all",
+                      emergencyMonths >= 6 ? "bg-income" : emergencyMonths >= 3 ? "bg-amber-500" : "bg-destructive"
+                    )}
+                    style={{ width: `${Math.min((emergencyMonths / 6) * 100, 100)}%` }}
+                  />
+                </div>
+                <p className="text-[10px] text-muted-foreground mt-1">Ideal: 6 meses de despesas</p>
               </div>
             </div>
           </CardContent>

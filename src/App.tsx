@@ -10,6 +10,7 @@ import { AppLayout } from "@/components/AppLayout";
 import Index from "@/pages/Index";
 import Dashboard from "@/pages/Dashboard";
 import Accounts from "@/pages/Accounts";
+import Investments from "@/pages/Investments";
 import Transactions from "@/pages/Transactions";
 import Categories from "@/pages/Categories";
 import Rules from "@/pages/Rules";
@@ -50,6 +51,8 @@ const App = () => (
             >
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/contas" element={<Accounts />} />
+              <Route path="/investimentos" element={<Investments />} />
+              <Route path="/movimentos" element={<Transactions />} />
               <Route path="/movimentos" element={<Transactions />} />
               <Route path="/categorias" element={<Categories />} />
               <Route path="/orcamentos" element={<Budgets />} />
