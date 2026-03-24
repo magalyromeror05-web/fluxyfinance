@@ -34,32 +34,31 @@ export default function AdminDashboard() {
       const today = startOfDay(new Date()).toISOString();
       const last24h = subDays(new Date(), 1).toISOString();
 
-      const [profiles, accounts, transactions, simulations, goals, investments, errors] = await Promise.all([
-        supabase.from("profiles").select("id, plan, last_active_at, onboarding_completed, created_at"),
-        supabase.from("accounts").select("id", { count: "exact", head: true }),
-        supabase.from("transactions").select("id", { count: "exact", head: true }),
-        supabase.from("simulations").select("id", { count: "exact", head: true }),
-        supabase.from("goals").select("id", { count: "exact", head: true }).eq("status", "active"),
-        supabase.from("investments").select("id", { count: "exact", head: true }),
+      const [profilesRes, accountsCount, transactionsCount, simulationsCount, goalsCount, investmentsCount, errorsCount] = await Promise.all([
+        supabase.rpc("admin_get_all_profiles"),
+        supabase.rpc("admin_count_table", { table_name: "accounts" }),
+        supabase.rpc("admin_count_table", { table_name: "transactions" }),
+        supabase.rpc("admin_count_table", { table_name: "simulations" }),
+        supabase.rpc("admin_count_table", { table_name: "goals" }),
+        supabase.rpc("admin_count_table", { table_name: "investments" }),
         supabase.from("error_logs").select("id", { count: "exact", head: true }).gte("created_at", last24h),
       ]);
 
-      const profilesList = profiles.data ?? [];
+      const profilesList = profilesRes.data ?? [];
       const totalUsers = profilesList.length;
-      const activeToday = profilesList.filter(p => p.last_active_at && p.last_active_at >= today).length;
-      const freePlan = profilesList.filter(p => !p.plan || p.plan === "free").length;
-      const proPlan = profilesList.filter(p => p.plan === "pro" || p.plan === "pro_annual").length;
-      const onboardingDone = profilesList.filter(p => p.onboarding_completed).length;
+      const activeToday = profilesList.filter((p: any) => p.last_active_at && p.last_active_at >= today).length;
+      const freePlan = profilesList.filter((p: any) => !p.plan || p.plan === "free").length;
+      const proPlan = profilesList.filter((p: any) => p.plan === "pro" || p.plan === "pro_annual").length;
+      const onboardingDone = profilesList.filter((p: any) => p.onboarding_completed).length;
       const onboardingPct = totalUsers > 0 ? Math.round((onboardingDone / totalUsers) * 100) : 0;
 
       // Signups per day last 30 days
-      const last30 = subDays(new Date(), 30);
       const dailySignups: Record<string, number> = {};
       for (let i = 0; i < 30; i++) {
         const d = format(subDays(new Date(), 29 - i), "yyyy-MM-dd");
         dailySignups[d] = 0;
       }
-      profilesList.forEach(p => {
+      profilesList.forEach((p: any) => {
         const d = p.created_at?.slice(0, 10);
         if (d && d in dailySignups) dailySignups[d]++;
       });
@@ -73,12 +72,12 @@ export default function AdminDashboard() {
         activeToday,
         freePlan,
         proPlan,
-        totalAccounts: accounts.count ?? 0,
-        totalTransactions: transactions.count ?? 0,
-        totalSimulations: simulations.count ?? 0,
-        errorsLast24h: errors.count ?? 0,
-        totalGoals: goals.count ?? 0,
-        totalInvestments: investments.count ?? 0,
+        totalAccounts: Number(accountsCount.data ?? 0),
+        totalTransactions: Number(transactionsCount.data ?? 0),
+        totalSimulations: Number(simulationsCount.data ?? 0),
+        errorsLast24h: errorsCount.count ?? 0,
+        totalGoals: Number(goalsCount.data ?? 0),
+        totalInvestments: Number(investmentsCount.data ?? 0),
         onboardingPct,
         chartData,
       };
@@ -108,7 +107,6 @@ export default function AdminDashboard() {
         <p className="text-sm text-muted-foreground">Métricas do Fluxy em tempo real</p>
       </div>
 
-      {/* Row 1 */}
       <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         <MetricCard title="Usuários cadastrados" value={s?.totalUsers ?? "—"} icon={Users} />
         <MetricCard title="Ativos hoje" value={s?.activeToday ?? "—"} icon={CheckCircle} color="text-emerald-600" />
@@ -116,7 +114,6 @@ export default function AdminDashboard() {
         <MetricCard title="Plano Pro" value={s?.proPlan ?? "—"} icon={Users} color="text-amber-600" />
       </div>
 
-      {/* Row 2 */}
       <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         <MetricCard title="Contas" value={s?.totalAccounts ?? "—"} icon={CreditCard} />
         <MetricCard title="Transações" value={s?.totalTransactions ?? "—"} icon={ArrowLeftRight} />
@@ -124,14 +121,12 @@ export default function AdminDashboard() {
         <MetricCard title="Erros (24h)" value={s?.errorsLast24h ?? "—"} icon={AlertTriangle} color="text-destructive" />
       </div>
 
-      {/* Row 3 */}
       <div className="grid gap-4 grid-cols-2 lg:grid-cols-3">
         <MetricCard title="Metas ativas" value={s?.totalGoals ?? "—"} icon={Target} />
         <MetricCard title="Investimentos" value={s?.totalInvestments ?? "—"} icon={Landmark} />
         <MetricCard title="Onboarding completo" value={s ? `${s.onboardingPct}%` : "—"} icon={CheckCircle} color="text-emerald-600" />
       </div>
 
-      {/* Chart */}
       <Card>
         <CardHeader>
           <CardTitle className="text-sm font-medium flex items-center gap-2">
@@ -153,7 +148,6 @@ export default function AdminDashboard() {
         </CardContent>
       </Card>
 
-      {/* Recent errors */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-sm font-medium">Últimos erros</CardTitle>

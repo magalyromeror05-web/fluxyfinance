@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -27,10 +27,7 @@ export default function AdminUsers() {
   const { data: users } = useQuery({
     queryKey: ["admin-users"],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("*")
-        .order("created_at", { ascending: false });
+      const { data } = await supabase.rpc("admin_get_all_profiles");
       return data ?? [];
     },
     staleTime: 60_000,
@@ -58,7 +55,6 @@ export default function AdminUsers() {
         <p className="text-sm text-muted-foreground">{filtered.length} usuários encontrados</p>
       </div>
 
-      {/* Filters */}
       <div className="flex flex-wrap gap-3 items-center">
         <div className="relative flex-1 min-w-[200px] max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -71,7 +67,6 @@ export default function AdminUsers() {
         ))}
       </div>
 
-      {/* Table */}
       <Card>
         <CardContent className="p-0 overflow-x-auto">
           <table className="w-full text-xs">
@@ -90,15 +85,9 @@ export default function AdminUsers() {
                 const badge = planBadge[plan] ?? planBadge.free;
                 const initials = (u.full_name || "?").split(" ").slice(0, 2).map((w: string) => w[0]).join("").toUpperCase();
                 return (
-                  <tr
-                    key={u.id}
-                    className="border-b border-border hover:bg-muted/50 cursor-pointer transition-colors"
-                    onClick={() => setSelected(u)}
-                  >
+                  <tr key={u.id} className="border-b border-border hover:bg-muted/50 cursor-pointer transition-colors" onClick={() => setSelected(u)}>
                     <td className="px-4 py-3 flex items-center gap-3">
-                      <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary flex-shrink-0">
-                        {initials}
-                      </div>
+                      <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary flex-shrink-0">{initials}</div>
                       <div>
                         <p className="font-medium text-foreground">{u.full_name || "—"}</p>
                         <p className="text-muted-foreground text-[10px]">{u.id?.slice(0, 8)}</p>
@@ -119,7 +108,6 @@ export default function AdminUsers() {
         </CardContent>
       </Card>
 
-      {/* Pagination */}
       <div className="flex items-center justify-between">
         <p className="text-xs text-muted-foreground">Página {page + 1} de {totalPages}</p>
         <div className="flex gap-2">
@@ -128,7 +116,6 @@ export default function AdminUsers() {
         </div>
       </div>
 
-      {/* User detail modal */}
       {selected && <UserDetailModal user={selected} onClose={() => setSelected(null)} />}
     </div>
   );
@@ -140,7 +127,7 @@ function UserDetailModal({ user, onClose }: { user: any; onClose: () => void }) 
   const { data: accounts } = useQuery({
     queryKey: ["admin-user-accounts", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("accounts").select("*").eq("user_id", userId);
+      const { data } = await supabase.rpc("admin_get_user_accounts", { p_user_id: userId });
       return data ?? [];
     },
   });
@@ -148,19 +135,19 @@ function UserDetailModal({ user, onClose }: { user: any; onClose: () => void }) 
   const { data: activity } = useQuery({
     queryKey: ["admin-user-activity", userId],
     queryFn: async () => {
-      const [txs, budgets, goals, sims, invs] = await Promise.all([
-        supabase.from("transactions").select("*").eq("user_id", userId).order("posted_at", { ascending: false }).limit(10),
-        supabase.from("budgets").select("id", { count: "exact", head: true }).eq("user_id", userId),
-        supabase.from("goals").select("id", { count: "exact", head: true }).eq("user_id", userId).eq("status", "active"),
-        supabase.from("simulations").select("id", { count: "exact", head: true }).eq("user_id", userId),
-        supabase.from("investments").select("id", { count: "exact", head: true }).eq("user_id", userId),
+      const [txsRes, budgets, goals, sims, invs] = await Promise.all([
+        supabase.rpc("admin_get_user_transactions", { p_user_id: userId, p_limit: 10 }),
+        supabase.rpc("admin_count_user_table", { table_name: "budgets", p_user_id: userId }),
+        supabase.rpc("admin_count_active_goals", { p_user_id: userId }),
+        supabase.rpc("admin_count_user_table", { table_name: "simulations", p_user_id: userId }),
+        supabase.rpc("admin_count_user_table", { table_name: "investments", p_user_id: userId }),
       ]);
       return {
-        transactions: txs.data ?? [],
-        budgets: budgets.count ?? 0,
-        goals: goals.count ?? 0,
-        simulations: sims.count ?? 0,
-        investments: invs.count ?? 0,
+        transactions: txsRes.data ?? [],
+        budgets: Number(budgets.data ?? 0),
+        goals: Number(goals.data ?? 0),
+        simulations: Number(sims.data ?? 0),
+        investments: Number(invs.data ?? 0),
       };
     },
   });
@@ -206,10 +193,10 @@ function UserDetailModal({ user, onClose }: { user: any; onClose: () => void }) 
           <TabsContent value="contas" className="space-y-2 text-xs">
             {!accounts?.length ? <p className="text-muted-foreground">Nenhuma conta.</p> : (
               <table className="w-full">
-                <thead><tr className="text-left text-muted-foreground border-b"><th className="py-2">Instituição</th><th>Moeda</th><th>Saldo</th><th>Status</th></tr></thead>
+                <thead><tr className="text-left text-muted-foreground border-b border-border"><th className="py-2">Instituição</th><th>Moeda</th><th>Saldo</th><th>Status</th></tr></thead>
                 <tbody>
                   {accounts.map((a: any) => (
-                    <tr key={a.id} className="border-b"><td className="py-2">{a.institution_name}</td><td>{a.currency}</td><td>{Number(a.balance).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</td><td>{a.status}</td></tr>
+                    <tr key={a.id} className="border-b border-border"><td className="py-2">{a.institution_name}</td><td>{a.currency}</td><td>{Number(a.balance).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</td><td>{a.status}</td></tr>
                   ))}
                 </tbody>
               </table>
@@ -226,10 +213,10 @@ function UserDetailModal({ user, onClose }: { user: any; onClose: () => void }) 
             <p className="text-sm font-medium mt-4">Últimas transações</p>
             {!activity?.transactions?.length ? <p className="text-muted-foreground">Nenhuma transação.</p> : (
               <table className="w-full">
-                <thead><tr className="text-left text-muted-foreground border-b"><th className="py-2">Data</th><th>Merchant</th><th>Valor</th></tr></thead>
+                <thead><tr className="text-left text-muted-foreground border-b border-border"><th className="py-2">Data</th><th>Merchant</th><th>Valor</th></tr></thead>
                 <tbody>
                   {activity.transactions.map((t: any) => (
-                    <tr key={t.id} className="border-b"><td className="py-1.5">{format(new Date(t.posted_at), "dd/MM")}</td><td>{t.merchant}</td><td className={t.amount < 0 ? "text-destructive" : "text-emerald-600"}>{Number(t.amount).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</td></tr>
+                    <tr key={t.id} className="border-b border-border"><td className="py-1.5">{format(new Date(t.posted_at), "dd/MM")}</td><td>{t.merchant}</td><td className={Number(t.amount) < 0 ? "text-destructive" : "text-emerald-600"}>{Number(t.amount).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</td></tr>
                   ))}
                 </tbody>
               </table>
@@ -260,7 +247,7 @@ function Info({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="space-y-0.5">
       <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{label}</p>
-      <p className="font-medium text-foreground">{typeof value === "string" || typeof value === "number" ? value : value}</p>
+      <div className="font-medium text-foreground">{value}</div>
     </div>
   );
 }
