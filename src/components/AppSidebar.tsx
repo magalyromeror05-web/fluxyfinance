@@ -14,7 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import fluxyLogo from "@/assets/fluxy-logo.png";
 
 const navItems = [
-  { label: "Dashboard", href: "/", icon: LayoutDashboard },
+  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Contas", href: "/contas", icon: CreditCard },
   { label: "Movimentos", href: "/movimentos", icon: ArrowLeftRight },
   { label: "Categorias", href: "/categorias", icon: Tags },
