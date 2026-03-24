@@ -209,8 +209,43 @@ export default function Dashboard() {
               transactions={transactions}
             />
           ))}
+
+          {user && transactions.length >= 5 && (
+            <AiTipsSection transactions={transactions} userId={user.id} />
+          )}
         </div>
       )}
     </div>
   );
+}
+
+function AiTipsSection({ transactions, userId }: { transactions: DbTransaction[]; userId: string }) {
+  const snapshot = useMemo<FinancialSnapshot>(() => {
+    const brlTxs = transactions.filter((t) => t.currency === "BRL");
+    const income = brlTxs.filter((t) => t.amount > 0).reduce((s, t) => s + t.amount, 0);
+    const expenses = brlTxs.filter((t) => t.amount < 0).reduce((s, t) => s + Math.abs(t.amount), 0);
+    const savingsRate = income > 0 ? Math.round(((income - expenses) / income) * 100) : 0;
+
+    const catMap = new Map<string, number>();
+    brlTxs.filter((t) => t.amount < 0).forEach((t) => {
+      const cat = t.category_id || "Sem categoria";
+      catMap.set(cat, (catMap.get(cat) || 0) + Math.abs(t.amount));
+    });
+
+    const topCategories = [...catMap.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([name, amount]) => ({ name, amount, pct: income > 0 ? Math.round((amount / income) * 100) : 0 }));
+
+    return {
+      totalIncomeBRL: income,
+      totalExpensesBRL: expenses,
+      topCategories,
+      budgetAlerts: [],
+      savingsRate,
+      currency: "BRL",
+    };
+  }, [transactions]);
+
+  return <AiTipsCard snapshot={snapshot} userId={userId} />;
 }
