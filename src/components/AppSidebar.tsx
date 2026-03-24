@@ -15,6 +15,7 @@ import {
   Heart,
   Star,
   BookOpen,
+  PieChart,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import fluxyLogo from "@/assets/fluxy-logo.png";
