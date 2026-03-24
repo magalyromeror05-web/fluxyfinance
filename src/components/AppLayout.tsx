@@ -1,6 +1,7 @@
 import { AppSidebar } from "@/components/AppSidebar";
 import { QuickAddButton } from "@/components/QuickAddButton";
 import { NotificationCenter } from "@/components/NotificationCenter";
+import { CurrencyConverterPopover } from "@/components/CurrencyConverter";
 import { Outlet } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState, useEffect } from "react";
