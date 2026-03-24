@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   CreditCard,
   ArrowLeftRight,
+  Repeat,
   Landmark,
   Target,
   Tags,
