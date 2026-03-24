@@ -149,6 +149,11 @@ export function QuickAddButton() {
             step="0.01"
             min="0"
           />
+          {currency !== "BRL" && parseFloat(amount) > 0 && (
+            <p className="text-xs text-muted-foreground text-center">
+              ≈ R$ {convert(parseFloat(amount), currency, "BRL").toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </p>
+          )}
         </div>
         <div className="flex justify-center gap-1">
           {([
