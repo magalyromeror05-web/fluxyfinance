@@ -43,6 +43,7 @@ const App = () => (
             {/* Rotas públicas */}
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/auth/reset-password" element={<ResetPassword />} />
             <Route path="/planos" element={<Plans />} />
 
             {/* Rotas protegidas */}
