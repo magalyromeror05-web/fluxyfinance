@@ -243,7 +243,7 @@ export default function Dashboard() {
       ) : (
         <div className="space-y-10">
           {currencies.map((currency) => (
-            <CurrencySection key={currency} currency={currency} accounts={accounts} transactions={transactions} />
+            <CurrencySection key={currency} currency={currency} accounts={accounts} transactions={transactions} convert={convert} />
           ))}
 
           {user && <GoalsWidget userId={user.id} />}
