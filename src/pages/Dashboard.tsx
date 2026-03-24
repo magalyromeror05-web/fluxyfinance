@@ -135,6 +135,7 @@ function DashboardSkeleton() {
 }
 
 export default function Dashboard() {
+  const { user } = useAuth();
   const { accounts, transactions, connections, loading } = useSupabaseData();
 
   const hasExpiring = connections.some((c) => c.status === "expiring");
