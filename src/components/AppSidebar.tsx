@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   CreditCard,
   ArrowLeftRight,
+  Repeat,
   Landmark,
   Target,
   Tags,
@@ -35,6 +36,7 @@ const mainItems = [
   { label: "Saúde", href: "/saude-financeira", icon: Heart },
   { label: "Dicas", href: "/dicas", icon: BookOpen },
   { label: "Relatórios", href: "/relatorios", icon: BarChart3 },
+  { label: "Conversor", href: "/conversor", icon: Repeat },
 ];
 
 const secondaryItems = [

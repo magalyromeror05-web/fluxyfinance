@@ -13,16 +13,19 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AiTipsCard } from "@/components/AiTipsCard";
+import { useExchangeRates } from "@/hooks/useExchangeRates";
 import type { FinancialSnapshot } from "@/lib/aiTips";
 
 function CurrencySection({
   currency,
   accounts,
   transactions,
+  convert,
 }: {
   currency: string;
   accounts: DbAccount[];
   transactions: DbTransaction[];
+  convert: (amount: number, from: string, to: string) => number;
 }) {
   const currencyAccounts = accounts.filter((a) => a.currency === currency);
   const currencyTxs = transactions.filter((t) => t.currency === currency);
@@ -53,6 +56,9 @@ function CurrencySection({
             {formatCurrency(balance, currency)}
           </p>
           <p className="text-xs text-muted-foreground mt-2">{currencyAccounts.length} conta(s)</p>
+          {currency !== "BRL" && (
+            <p className="text-[10px] text-muted-foreground/70 mt-1">≈ {formatCurrency(convert(balance, currency, "BRL"), "BRL")} na cotação atual</p>
+          )}
         </div>
 
         <div className="atlas-card p-5">
@@ -183,7 +189,7 @@ function GoalsWidget({ userId }: { userId: string }) {
 export default function Dashboard() {
   const { user } = useAuth();
   const { accounts, transactions, connections, loading } = useSupabaseData();
-
+  const { convert } = useExchangeRates();
   const hasExpiring = connections.some((c) => c.status === "expiring");
   const currencies = [...new Set(accounts.map((a) => a.currency))];
   const lastSync = accounts.map((a) => a.last_sync_at).filter(Boolean).sort().reverse()[0];
@@ -237,7 +243,7 @@ export default function Dashboard() {
       ) : (
         <div className="space-y-10">
           {currencies.map((currency) => (
-            <CurrencySection key={currency} currency={currency} accounts={accounts} transactions={transactions} />
+            <CurrencySection key={currency} currency={currency} accounts={accounts} transactions={transactions} convert={convert} />
           ))}
 
           {user && <GoalsWidget userId={user.id} />}

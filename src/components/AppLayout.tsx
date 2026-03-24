@@ -1,6 +1,7 @@
 import { AppSidebar } from "@/components/AppSidebar";
 import { QuickAddButton } from "@/components/QuickAddButton";
 import { NotificationCenter } from "@/components/NotificationCenter";
+import { CurrencyConverterPopover } from "@/components/CurrencyConverter";
 import { Outlet } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState, useEffect } from "react";
@@ -37,6 +38,7 @@ export function AppLayout() {
             </SheetContent>
           </Sheet>
           <span className="text-sm font-bold text-foreground flex-1">Fluxy</span>
+          <CurrencyConverterPopover />
           <NotificationCenter />
         </header>
         <main className="flex-1 overflow-y-auto">
@@ -52,6 +54,7 @@ export function AppLayout() {
       <AppSidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="flex items-center justify-end px-6 py-3 border-b border-border bg-card flex-shrink-0">
+          <CurrencyConverterPopover />
           <NotificationCenter />
         </header>
         <main className="flex-1 overflow-y-auto">

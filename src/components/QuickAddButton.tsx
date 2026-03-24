@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
@@ -21,6 +21,7 @@ import { Plus, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { useExchangeRates } from "@/hooks/useExchangeRates";
 
 type TxType = "expense" | "income" | "transfer";
 type Curr = "BRL" | "USD" | "EUR" | "PYG";
@@ -33,6 +34,7 @@ export function QuickAddButton() {
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
+  const { convert } = useExchangeRates();
 
   // Data
   const [categories, setCategories] = useState<Cat[]>([]);
@@ -147,6 +149,11 @@ export function QuickAddButton() {
             step="0.01"
             min="0"
           />
+          {currency !== "BRL" && parseFloat(amount) > 0 && (
+            <p className="text-xs text-muted-foreground text-center">
+              ≈ R$ {convert(parseFloat(amount), currency, "BRL").toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </p>
+          )}
         </div>
         <div className="flex justify-center gap-1">
           {([
