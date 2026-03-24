@@ -56,6 +56,9 @@ function CurrencySection({
             {formatCurrency(balance, currency)}
           </p>
           <p className="text-xs text-muted-foreground mt-2">{currencyAccounts.length} conta(s)</p>
+          {currency !== "BRL" && (
+            <p className="text-[10px] text-muted-foreground/70 mt-1">≈ {formatCurrency(convert(balance, currency, "BRL"), "BRL")} na cotação atual</p>
+          )}
         </div>
 
         <div className="atlas-card p-5">
