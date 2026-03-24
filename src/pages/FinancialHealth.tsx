@@ -1,9 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { useSupabaseData } from "@/hooks/useSupabaseData";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AiTipsCard } from "@/components/AiTipsCard";
+import { cn } from "@/lib/utils";
 import type { FinancialSnapshot } from "@/lib/aiTips";
 
 function ScoreGauge({ score }: { score: number }) {
