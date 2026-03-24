@@ -22,6 +22,7 @@ import Projection from "@/pages/Projection";
 import FinancialHealth from "@/pages/FinancialHealth";
 import FinancialTips from "@/pages/FinancialTips";
 import Notifications from "@/pages/Notifications";
+import Goals from "@/pages/Goals";
 import Auth from "@/pages/Auth";
 import Plans from "@/pages/Plans";
 import NotFound from "./pages/NotFound";
