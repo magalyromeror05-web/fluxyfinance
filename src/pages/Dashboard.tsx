@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useSupabaseData } from "@/hooks/useSupabaseData";
 import { CURRENCY_LABELS, formatCurrency } from "@/types/database";
 import type { DbAccount, DbTransaction } from "@/types/database";
@@ -7,6 +8,9 @@ import { TrendingUp, TrendingDown, RefreshCw, Bell, AlertTriangle, Plus } from "
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { AiTipsCard } from "@/components/AiTipsCard";
+import type { FinancialSnapshot } from "@/lib/aiTips";
 
 function CurrencySection({
   currency,
