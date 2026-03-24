@@ -616,6 +616,17 @@ export default function Budgets() {
           )}
         </TabsContent>
 
+        {/* ════════════ TAB 2 — PLANILHA ════════════ */}
+        <TabsContent value="spreadsheet">
+          <BudgetSpreadsheet
+            budgets={budgets}
+            categories={categories}
+            transactions={transactions}
+            selectedMonth={selectedMonth}
+            onRefresh={fetchAll}
+          />
+        </TabsContent>
+
         {/* ════════════ TAB 2 — REALIZADO ════════════ */}
         <TabsContent value="realized">
           {/* Month selector */}
