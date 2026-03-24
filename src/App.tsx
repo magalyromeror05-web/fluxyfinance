@@ -37,7 +37,9 @@ const App = () => (
             <Route
               element={
                 <AuthGuard>
-                  <AppLayout />
+                  <OnboardingGuard>
+                    <AppLayout />
+                  </OnboardingGuard>
                 </AuthGuard>
               }
             >
