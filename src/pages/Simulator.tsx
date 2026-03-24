@@ -22,7 +22,6 @@ function formatCurrency(amount: number, currency: string): string {
   }
   return baseFormatCurrency(amount, currency as Currency);
 }
-import { getHealthyPercent } from "@/data/healthyBudget";
 import {
   Calculator, Plus, Trash2, Archive, Home, CreditCard, Car,
   Tv, HeartPulse, Pencil, AlertTriangle, TrendingDown, TrendingUp,
