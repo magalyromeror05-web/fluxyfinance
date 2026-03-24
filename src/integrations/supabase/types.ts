@@ -415,12 +415,16 @@ export type Database = {
           category_id: string | null
           created_at: string
           currency: string
+          diagnosis: string | null
           duration_type: string | null
           duration_value: number | null
+          horizon_months: number | null
           id: string
           metadata: Json | null
           monthly_amount: number
+          monthly_impact: number | null
           name: string
+          simulation_type: string | null
           status: string
           type: string
           user_id: string
@@ -429,12 +433,16 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           currency?: string
+          diagnosis?: string | null
           duration_type?: string | null
           duration_value?: number | null
+          horizon_months?: number | null
           id?: string
           metadata?: Json | null
           monthly_amount: number
+          monthly_impact?: number | null
           name: string
+          simulation_type?: string | null
           status?: string
           type: string
           user_id: string
@@ -443,12 +451,16 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           currency?: string
+          diagnosis?: string | null
           duration_type?: string | null
           duration_value?: number | null
+          horizon_months?: number | null
           id?: string
           metadata?: Json | null
           monthly_amount?: number
+          monthly_impact?: number | null
           name?: string
+          simulation_type?: string | null
           status?: string
           type?: string
           user_id?: string
