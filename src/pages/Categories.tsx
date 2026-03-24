@@ -15,6 +15,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { EmojiPicker } from "@/components/EmojiPicker";
 
 interface DbCategory {
   id: string;
@@ -25,8 +26,6 @@ interface DbCategory {
   icon: string;
   created_at: string;
 }
-
-const ICON_OPTIONS = ["📁", "🏠", "🍽️", "🚗", "📺", "💰", "💼", "🎯", "🛒", "🎬", "💻", "⚡", "🏗️", "📱", "↔️", "💸", "🎓", "🏥", "✈️", "🎮", "👕", "🐾"];
 
 const ALL = "ALL" as const;
 type Filter = Currency | typeof ALL;
@@ -294,19 +293,9 @@ export default function Categories() {
 
             <div>
               <Label>Ícone</Label>
-              <div className="flex flex-wrap gap-2 mt-1">
-                {ICON_OPTIONS.map(ic => (
-                  <button
-                    key={ic}
-                    onClick={() => setIcon(ic)}
-                    className={cn(
-                      "w-9 h-9 rounded-md text-lg flex items-center justify-center border transition-colors",
-                      icon === ic ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
-                    )}
-                  >
-                    {ic}
-                  </button>
-                ))}
+              <div className="flex items-center gap-3 mt-1">
+                <EmojiPicker value={icon} onChange={setIcon} />
+                <span className="text-sm text-muted-foreground">Clique para escolher um emoji</span>
               </div>
             </div>
 
