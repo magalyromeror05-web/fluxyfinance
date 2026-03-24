@@ -2,10 +2,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AuthGuard } from "@/components/AuthGuard";
 import { AppLayout } from "@/components/AppLayout";
+import Index from "@/pages/Index";
 import Dashboard from "@/pages/Dashboard";
 import Accounts from "@/pages/Accounts";
 import Transactions from "@/pages/Transactions";
@@ -27,7 +28,8 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            {/* Rota pública */}
+            {/* Rotas públicas */}
+            <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
 
             {/* Rotas protegidas */}
@@ -38,7 +40,7 @@ const App = () => (
                 </AuthGuard>
               }
             >
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/contas" element={<Accounts />} />
               <Route path="/movimentos" element={<Transactions />} />
               <Route path="/categorias" element={<Categories />} />
