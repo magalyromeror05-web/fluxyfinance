@@ -463,7 +463,7 @@ export default function FluxyLanding() {
       {/* ─── CTA SECTION ─── */}
       <section className="py-20 px-4" style={{ background: "linear-gradient(135deg, #312e81, #4F46E5, #7C6FF7)" }}>
         <div className="max-w-2xl mx-auto text-center">
-          <FluxyLogo className="h-10 text-white mx-auto mb-6" />
+          <FluxyLogo className="h-10 mx-auto mb-6" textColor="text-white" />
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             {t.ctaSection.title[lang]}
           </h2>
