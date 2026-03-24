@@ -16,6 +16,7 @@ import Rules from "@/pages/Rules";
 import Contracts from "@/pages/Contracts";
 import Connections from "@/pages/Connections";
 import Budgets from "@/pages/Budgets";
+import Projection from "@/pages/Projection";
 import Auth from "@/pages/Auth";
 import NotFound from "./pages/NotFound";
 
