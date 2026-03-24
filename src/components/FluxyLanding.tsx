@@ -228,7 +228,7 @@ export default function FluxyLanding() {
 
   return (
     <div className="min-h-screen" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+      {/* Plus Jakarta Sans already loaded via index.css */}
 
       {/* ─── NAVBAR ─── */}
       <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/80 border-b border-[hsl(262_40%_90%)]">
