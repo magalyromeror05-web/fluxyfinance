@@ -14,6 +14,7 @@ import {
   TrendingUp,
   Heart,
   Star,
+  BookOpen,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import fluxyLogo from "@/assets/fluxy-logo.png";
