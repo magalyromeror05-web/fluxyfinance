@@ -17,6 +17,7 @@ import { CurrencyBadge } from "@/components/CurrencyBadge";
 import { formatCurrency, type Currency } from "@/data/mockData";
 import { BENCHMARK_GROUPS, getHealthyPercent } from "@/data/healthyBudget";
 import { Plus, Pencil, Trash2, Target, Wallet, Copy, DollarSign, CheckCircle, AlertTriangle, XCircle } from "lucide-react";
+import { BudgetSpreadsheet } from "@/components/BudgetSpreadsheet";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { format, endOfMonth, addMonths, subMonths, parse } from "date-fns";
@@ -426,6 +427,7 @@ export default function Budgets() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-6">
           <TabsTrigger value="budgets">Orçamentos</TabsTrigger>
+          <TabsTrigger value="spreadsheet">Planilha</TabsTrigger>
           <TabsTrigger value="realized">Realizado</TabsTrigger>
         </TabsList>
 
@@ -612,6 +614,17 @@ export default function Budgets() {
               ))}
             </div>
           )}
+        </TabsContent>
+
+        {/* ════════════ TAB 2 — PLANILHA ════════════ */}
+        <TabsContent value="spreadsheet">
+          <BudgetSpreadsheet
+            budgets={budgets}
+            categories={categories}
+            transactions={transactions}
+            selectedMonth={selectedMonth}
+            onRefresh={fetchAll}
+          />
         </TabsContent>
 
         {/* ════════════ TAB 2 — REALIZADO ════════════ */}
