@@ -481,7 +481,7 @@ export default function FluxyLanding() {
       <footer className="py-10 px-4" style={{ background: "#0f0d24" }}>
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex flex-col items-center sm:items-start gap-1">
-            <FluxyLogo className="h-6 text-white" />
+            <FluxyLogo className="h-6" textColor="text-white" />
             <span className="text-xs text-white/30">{t.footer.tagline[lang]}</span>
           </div>
           <div className="flex items-center gap-6 text-xs text-white/40">
