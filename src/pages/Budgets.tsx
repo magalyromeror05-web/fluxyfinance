@@ -599,14 +599,25 @@ export default function Budgets() {
                                   </span>
                                 )}
                               </div>
-                              {idealPct ? (
-                                <div className="flex items-center gap-1.5 mt-1">
-                                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/5 border border-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
+                              {idealPct ? (() => {
+                                const tooltipText = cat ? getBenchmarkTooltip(cat.name) : null;
+                                const badge = (
+                                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/5 border border-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary cursor-help">
                                     🎯 Ideal: até {idealPct}% da renda
                                   </span>
-                                  {healthRatio !== null && healthRatio > 100 && <span className="text-[10px] text-amber-600 font-medium">↑ {Math.round(healthRatio - 100)}% acima</span>}
-                                </div>
-                              ) : monthlyIncome <= 0 && cur === "BRL" ? (
+                                );
+                                return (
+                                  <div className="flex items-center gap-1.5 mt-1">
+                                    {tooltipText ? (
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>{badge}</TooltipTrigger>
+                                        <TooltipContent className="max-w-xs text-xs">{tooltipText}</TooltipContent>
+                                      </Tooltip>
+                                    ) : badge}
+                                    {healthRatio !== null && healthRatio > 100 && <span className="text-[10px] text-amber-600 font-medium">↑ {Math.round(healthRatio - 100)}% acima</span>}
+                                  </div>
+                                );
+                              })() : monthlyIncome <= 0 && cur === "BRL" ? (
                                 <p className="text-[10px] text-muted-foreground mt-1">Configure sua renda para ver o % saudável</p>
                               ) : null}
                             </div>
