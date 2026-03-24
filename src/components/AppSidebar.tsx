@@ -10,8 +10,6 @@ import {
   FileText,
   Plug2,
   LogOut,
-  Target,
-  Calculator,
   TrendingUp,
   Heart,
   Star,
