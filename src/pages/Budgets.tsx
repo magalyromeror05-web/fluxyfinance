@@ -12,13 +12,13 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { Progress } from "@/components/ui/progress";
 import { CurrencyBadge } from "@/components/CurrencyBadge";
 import { formatCurrency, type Currency } from "@/data/mockData";
-import { Plus, Pencil, Trash2, Target, Wallet, Copy } from "lucide-react";
+import { BENCHMARK_GROUPS, getHealthyPercent } from "@/data/healthyBudget";
+import { Plus, Pencil, Trash2, Target, Wallet, Copy, DollarSign } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { format, startOfMonth, endOfMonth, addMonths, parse } from "date-fns";
+import { format, endOfMonth, addMonths, parse } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 interface DbCategory {
@@ -40,11 +40,25 @@ interface Budget {
   period_start_day: number;
   period_month: string | null;
   is_recurring: boolean;
+  healthy_pct: number | null;
   created_at: string;
   updated_at: string;
 }
 
 const currencies: Currency[] = ["BRL", "USD", "PYG"];
+
+// ─── Health bar color helper ───
+function getHealthColor(pct: number) {
+  if (pct <= 85) return "bg-[hsl(var(--income))]";
+  if (pct <= 100) return "bg-amber-500";
+  return "bg-[hsl(var(--expense))]";
+}
+
+function getHealthTextColor(pct: number) {
+  if (pct <= 85) return "text-income";
+  if (pct <= 100) return "text-amber-600";
+  return "text-destructive";
+}
 
 export default function Budgets() {
   const { user } = useAuth();
@@ -57,6 +71,11 @@ export default function Budgets() {
   const [filterCurrency, setFilterCurrency] = useState<Currency | "ALL">("ALL");
   const [selectedMonth, setSelectedMonth] = useState(format(new Date(), "yyyy-MM"));
 
+  // Income
+  const [monthlyIncome, setMonthlyIncome] = useState<number>(0);
+  const [incomeInput, setIncomeInput] = useState("");
+  const [savingIncome, setSavingIncome] = useState(false);
+
   // Form state
   const [name, setName] = useState("");
   const [currency, setCurrency] = useState<Currency>("BRL");
@@ -64,21 +83,28 @@ export default function Budgets() {
   const [amount, setAmount] = useState("");
   const [isRecurring, setIsRecurring] = useState(true);
   const [recurMonths, setRecurMonths] = useState("3");
+  const [healthyPct, setHealthyPct] = useState<string>("");
 
   const fetchAll = async () => {
-    const [budgetsRes, categoriesRes, txRes] = await Promise.all([
+    const [budgetsRes, categoriesRes, txRes, profileRes] = await Promise.all([
       supabase.from("budgets").select("*").order("created_at", { ascending: false }),
       supabase.from("categories").select("*").order("created_at", { ascending: true }),
       supabase.from("transactions").select("*"),
+      supabase.from("profiles").select("monthly_income_brl").eq("id", user!.id).single(),
     ]);
 
     if (budgetsRes.data) setBudgets(budgetsRes.data as Budget[]);
     if (categoriesRes.data) setCategories(categoriesRes.data as DbCategory[]);
     if (txRes.data) setTransactions(txRes.data);
+    if (profileRes.data) {
+      const income = (profileRes.data as any).monthly_income_brl || 0;
+      setMonthlyIncome(income);
+      setIncomeInput(income > 0 ? String(income) : "");
+    }
     setLoading(false);
   };
 
-  useEffect(() => { fetchAll(); }, []);
+  useEffect(() => { if (user) fetchAll(); }, [user]);
 
   const expenseCategories = categories.filter(c => c.type === "expense" && !c.parent_id);
 
@@ -87,7 +113,6 @@ export default function Budgets() {
       ? [budget.category_id, ...categories.filter(c => c.parent_id === budget.category_id).map(c => c.id)]
       : categories.filter(c => c.type === "expense").map(c => c.id);
 
-    // Determine date range for the budget's month
     const month = budget.period_month || selectedMonth;
     const monthDate = parse(month + "-01", "yyyy-MM-dd", new Date());
     const startDay = budget.period_start_day || 1;
@@ -108,9 +133,22 @@ export default function Budgets() {
       .reduce((sum, t) => sum + Math.abs(t.amount), 0);
   };
 
+  const saveIncome = async () => {
+    const val = parseFloat(incomeInput) || 0;
+    setSavingIncome(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ monthly_income_brl: val } as any)
+      .eq("id", user!.id);
+    setSavingIncome(false);
+    if (error) { toast.error("Erro ao salvar renda"); return; }
+    setMonthlyIncome(val);
+    toast.success("Renda mensal atualizada");
+  };
+
   const resetForm = () => {
     setName(""); setCurrency("BRL"); setCategoryId("global");
-    setAmount(""); setIsRecurring(true); setRecurMonths("3");
+    setAmount(""); setIsRecurring(true); setRecurMonths("3"); setHealthyPct("");
     setEditingBudget(null);
   };
 
@@ -124,7 +162,26 @@ export default function Budgets() {
     setAmount(String(b.amount));
     setIsRecurring(b.is_recurring);
     setRecurMonths("1");
+    setHealthyPct(b.healthy_pct ? String(b.healthy_pct) : "");
     setDialogOpen(true);
+  };
+
+  // Auto-suggest healthy % when category changes
+  const handleCategoryChange = (catId: string) => {
+    setCategoryId(catId);
+    if (catId !== "global") {
+      const cat = categories.find(c => c.id === catId);
+      if (cat) {
+        const pct = getHealthyPercent(cat.name);
+        if (pct !== undefined) {
+          setHealthyPct(String(pct));
+          // Also suggest amount if income is set
+          if (monthlyIncome > 0 && !amount) {
+            setAmount(String(Math.round(monthlyIncome * pct / 100)));
+          }
+        }
+      }
+    }
   };
 
   const handleSave = async () => {
@@ -133,6 +190,8 @@ export default function Budgets() {
       return;
     }
 
+    const hPct = healthyPct ? Number(healthyPct) : null;
+
     if (editingBudget) {
       const payload = {
         name: name.trim(),
@@ -140,13 +199,13 @@ export default function Budgets() {
         category_id: categoryId === "global" ? null : categoryId,
         amount: Number(amount),
         is_recurring: isRecurring,
+        healthy_pct: hPct,
         updated_at: new Date().toISOString(),
       };
       const { error } = await supabase.from("budgets").update(payload).eq("id", editingBudget.id);
       if (error) { toast.error("Erro ao atualizar"); return; }
       toast.success("Orçamento atualizado");
     } else {
-      // Create for current month + future months if recurring
       const monthsToCreate = isRecurring ? Math.max(1, Number(recurMonths) || 1) : 1;
       const baseMonth = parse(selectedMonth + "-01", "yyyy-MM-dd", new Date());
       const rows = [];
@@ -163,6 +222,7 @@ export default function Budgets() {
           period_start_day: 1,
           period_month: format(m, "yyyy-MM"),
           is_recurring: isRecurring,
+          healthy_pct: hPct,
           updated_at: new Date().toISOString(),
         });
       }
@@ -190,7 +250,6 @@ export default function Budgets() {
     const next = addMonths(current, 1);
     const nextMonth = format(next, "yyyy-MM");
 
-    // Check if already exists
     const exists = budgets.find(
       x => x.name === b.name && x.period_month === nextMonth && x.currency === b.currency
     );
@@ -209,6 +268,7 @@ export default function Budgets() {
       period_start_day: b.period_start_day,
       period_month: nextMonth,
       is_recurring: b.is_recurring,
+      healthy_pct: b.healthy_pct,
       updated_at: new Date().toISOString(),
     });
     if (error) { toast.error("Erro ao duplicar"); return; }
@@ -242,6 +302,31 @@ export default function Budgets() {
     return format(d, "MMMM yyyy", { locale: ptBR });
   };
 
+  // ─── Health summary diagnostics ───
+  const brlBudgets = monthBudgets.filter(b => b.currency === "BRL");
+  const overBudgetCategories = brlBudgets
+    .filter(b => {
+      if (!monthlyIncome || !b.healthy_pct) return false;
+      const idealAmount = monthlyIncome * b.healthy_pct / 100;
+      return b.amount > idealAmount;
+    })
+    .map(b => b.name);
+
+  // Build distribution data for summary chart
+  const distributionData = brlBudgets
+    .filter(b => b.category_id)
+    .map(b => {
+      const cat = categories.find(c => c.id === b.category_id);
+      const pctOfIncome = monthlyIncome > 0 ? (b.amount / monthlyIncome) * 100 : 0;
+      const idealPct = b.healthy_pct || (cat ? getHealthyPercent(cat.name) : undefined) || 0;
+      return {
+        name: b.name,
+        icon: cat?.icon || "📁",
+        pctOfIncome: Math.round(pctOfIncome),
+        idealPct,
+      };
+    });
+
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
@@ -257,6 +342,94 @@ export default function Budgets() {
         </Button>
       </div>
 
+      {/* ─── Monthly Income Card ─── */}
+      <Card className="mb-6">
+        <CardContent className="p-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <DollarSign className="h-4 w-4 text-primary" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-foreground">Qual é sua renda mensal em BRL?</p>
+                <p className="text-[11px] text-muted-foreground">
+                  Usamos isso para calcular os % saudáveis. Só você vê esse dado.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Input
+                type="number"
+                placeholder="0.00"
+                value={incomeInput}
+                onChange={(e) => setIncomeInput(e.target.value)}
+                className="w-36"
+                step={100}
+              />
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={saveIncome}
+                disabled={savingIncome}
+              >
+                {savingIncome ? "..." : "Salvar"}
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ─── Budget Distribution Summary ─── */}
+      {monthlyIncome > 0 && distributionData.length > 0 && (
+        <Card className="mb-6">
+          <CardContent className="p-4">
+            <p className="text-sm font-semibold text-foreground mb-3">📊 Distribuição do seu orçamento</p>
+            <div className="space-y-2.5">
+              {distributionData.map((d, i) => (
+                <div key={i} className="space-y-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-foreground font-medium">{d.icon} {d.name}</span>
+                    <span className="text-muted-foreground tabular-nums">
+                      {d.pctOfIncome}% <span className="text-muted-foreground/60">/ ideal {d.idealPct}%</span>
+                    </span>
+                  </div>
+                  <div className="relative h-2 rounded-full bg-muted overflow-hidden">
+                    {/* Ideal marker */}
+                    {d.idealPct > 0 && (
+                      <div
+                        className="absolute top-0 bottom-0 w-0.5 bg-foreground/20 z-10"
+                        style={{ left: `${Math.min(d.idealPct, 100)}%` }}
+                      />
+                    )}
+                    {/* Actual bar */}
+                    <div
+                      className={cn(
+                        "h-full rounded-full transition-all duration-500",
+                        d.idealPct > 0
+                          ? getHealthColor((d.pctOfIncome / d.idealPct) * 100)
+                          : "bg-primary"
+                      )}
+                      style={{ width: `${Math.min(d.pctOfIncome, 100)}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Diagnostic */}
+            <div className="mt-4 text-xs">
+              {overBudgetCategories.length === 0 ? (
+                <p className="text-income font-medium">✅ Sua distribuição está equilibrada</p>
+              ) : (
+                <p className="text-amber-600 font-medium">
+                  ⚠️ {overBudgetCategories.join(", ")} {overBudgetCategories.length === 1 ? "está" : "estão"} acima do recomendado
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Month selector + Currency filter */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <Select value={selectedMonth} onValueChange={setSelectedMonth}>
@@ -270,7 +443,7 @@ export default function Budgets() {
           </SelectContent>
         </Select>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           {(["ALL", "BRL", "USD", "PYG"] as const).map(f => (
             <button
               key={f}
@@ -319,9 +492,19 @@ export default function Budgets() {
               <div className="grid gap-3">
                 {items.map(b => {
                   const spent = getSpentForBudget(b);
-                  const pct = Math.min((spent / b.amount) * 100, 100);
+                  const pct = b.amount > 0 ? (spent / b.amount) * 100 : 0;
+                  const clampedPct = Math.min(pct, 100);
                   const isOver = spent > b.amount;
                   const cat = b.category_id ? categories.find(c => c.id === b.category_id) : null;
+
+                  // Health calculations
+                  const idealPct = b.healthy_pct || (cat ? getHealthyPercent(cat.name) : undefined);
+                  const pctOfIncome = monthlyIncome > 0 && cur === "BRL"
+                    ? (b.amount / monthlyIncome) * 100
+                    : null;
+                  const healthRatio = idealPct && pctOfIncome
+                    ? (pctOfIncome / idealPct) * 100
+                    : null;
 
                   return (
                     <Card key={b.id} className="group">
@@ -364,19 +547,55 @@ export default function Budgets() {
                           </div>
                         </div>
 
+                        {/* Health-colored progress bar */}
                         <div className="space-y-2">
-                          <Progress
-                            value={pct}
-                            className={cn("h-2", isOver && "[&>div]:bg-destructive")}
-                          />
-                          <div className="flex items-center justify-between text-xs">
-                            <span className={cn("font-semibold tabular-nums", isOver ? "text-destructive" : "text-foreground")}>
-                              {formatCurrency(spent, cur)}
-                            </span>
-                            <span className="text-muted-foreground tabular-nums">
-                              de {formatCurrency(b.amount, cur)}
+                          <div className="relative h-2.5 rounded-full bg-muted overflow-hidden">
+                            <div
+                              className={cn(
+                                "h-full rounded-full transition-all duration-500",
+                                healthRatio !== null
+                                  ? getHealthColor(healthRatio)
+                                  : isOver
+                                  ? "bg-[hsl(var(--expense))]"
+                                  : "bg-primary"
+                              )}
+                              style={{ width: `${clampedPct}%` }}
+                            />
+                          </div>
+
+                          <div className="flex items-center justify-between text-xs gap-2 flex-wrap">
+                            <span className={cn(
+                              "font-semibold tabular-nums",
+                              healthRatio !== null
+                                ? getHealthTextColor(healthRatio)
+                                : isOver ? "text-destructive" : "text-foreground"
+                            )}>
+                              {formatCurrency(spent, cur)} gastos de {formatCurrency(b.amount, cur)}
+                              {pctOfIncome !== null && (
+                                <span className="text-muted-foreground font-normal ml-1">
+                                  ({Math.round(pctOfIncome)}% da renda)
+                                </span>
+                              )}
                             </span>
                           </div>
+
+                          {/* Healthy % badge */}
+                          {idealPct ? (
+                            <div className="flex items-center gap-1.5 mt-1">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-primary/5 border border-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
+                                🎯 Ideal: até {idealPct}% da renda
+                              </span>
+                              {healthRatio !== null && healthRatio > 100 && (
+                                <span className="text-[10px] text-amber-600 font-medium">
+                                  ↑ {Math.round(healthRatio - 100)}% acima
+                                </span>
+                              )}
+                            </div>
+                          ) : monthlyIncome <= 0 && cur === "BRL" ? (
+                            <p className="text-[10px] text-muted-foreground mt-1">
+                              Configure sua renda para ver o % saudável
+                            </p>
+                          ) : null}
                         </div>
                       </CardContent>
                     </Card>
@@ -414,7 +633,7 @@ export default function Budgets() {
               </div>
               <div>
                 <Label>Categoria</Label>
-                <Select value={categoryId} onValueChange={setCategoryId}>
+                <Select value={categoryId} onValueChange={handleCategoryChange}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="global">🌐 Global (todas)</SelectItem>
@@ -426,9 +645,27 @@ export default function Budgets() {
               </div>
             </div>
 
-            <div>
-              <Label>Limite</Label>
-              <Input type="number" placeholder="0.00" value={amount} onChange={e => setAmount(e.target.value)} min={0} step={0.01} />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Limite</Label>
+                <Input type="number" placeholder="0.00" value={amount} onChange={e => setAmount(e.target.value)} min={0} step={0.01} />
+              </div>
+              <div>
+                <Label>% saudável da renda</Label>
+                <Input
+                  type="number"
+                  placeholder="Ex: 30"
+                  value={healthyPct}
+                  onChange={e => setHealthyPct(e.target.value)}
+                  min={0}
+                  max={100}
+                />
+                {healthyPct && (
+                  <p className="text-[10px] text-muted-foreground mt-1">
+                    🎯 Ideal: até {healthyPct}% da renda
+                  </p>
+                )}
+              </div>
             </div>
 
             {!editingBudget && (
