@@ -38,6 +38,7 @@ export function AppLayout() {
             </SheetContent>
           </Sheet>
           <span className="text-sm font-bold text-foreground flex-1">Fluxy</span>
+          <CurrencyConverterPopover />
           <NotificationCenter />
         </header>
         <main className="flex-1 overflow-y-auto">
