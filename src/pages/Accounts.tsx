@@ -3,7 +3,7 @@ import { useAccounts } from "@/hooks/useSupabaseData";
 import { formatCurrency, CURRENCY_LABELS } from "@/types/database";
 import { CurrencyBadge } from "@/components/CurrencyBadge";
 import { cn } from "@/lib/utils";
-import { RefreshCw, CheckCircle2, AlertTriangle, XCircle, Building2, Plus, X } from "lucide-react";
+import { RefreshCw, CheckCircle2, AlertTriangle, XCircle, Building2, Plus, PenLine } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -34,6 +34,7 @@ const statusConfig: Record<string, { icon: typeof CheckCircle2; label: string; c
   connected: { icon: CheckCircle2, label: "Conectado", className: "text-income" },
   expiring: { icon: AlertTriangle, label: "Expirando", className: "text-amber-500" },
   disconnected: { icon: XCircle, label: "Desconectado", className: "text-expense" },
+  manual: { icon: PenLine, label: "Manual", className: "text-muted-foreground" },
 };
 
 const typeLabels: Record<string, string> = {
@@ -95,7 +96,9 @@ export default function Accounts() {
       account_name: form.account_name.trim(),
       type: form.type,
       currency: form.currency,
-      balance: parseFloat(form.balance) || 0,
+      balance: Math.abs(parseFloat(form.balance) || 0),
+      connection_id: null,
+      status: "manual",
     });
     setSaving(false);
 
@@ -108,6 +111,12 @@ export default function Accounts() {
     setForm({ institution_name: "", account_name: "", type: "checking", currency: "BRL", balance: "" });
     setDialogOpen(false);
     queryClient.invalidateQueries({ queryKey: ["accounts"] });
+  };
+
+  /** Derive display status: manual if no connection_id, otherwise use DB status */
+  const getDisplayStatus = (account: (typeof accounts)[0]) => {
+    if (!account.connection_id) return "manual";
+    return account.status;
   };
 
   if (isLoading) {
@@ -196,6 +205,7 @@ export default function Accounts() {
                 <Input
                   type="number"
                   step="0.01"
+                  min="0"
                   placeholder="0.00"
                   value={form.balance}
                   onChange={(e) => setForm((f) => ({ ...f, balance: e.target.value }))}
@@ -255,12 +265,14 @@ export default function Accounts() {
           {/* Accounts list */}
           <div className="space-y-3 fade-in">
             {filtered.map((account) => {
-              const sc = statusConfig[account.status] || statusConfig.connected;
+              const displayStatus = getDisplayStatus(account);
+              const sc = statusConfig[displayStatus] || statusConfig.manual;
               const { icon: StatusIcon, label, className } = sc;
+              const isManual = !account.connection_id;
               const syncDate = account.last_sync_at ? new Date(account.last_sync_at) : null;
               const syncLabel = syncDate
                 ? syncDate.toLocaleString("pt-BR", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short" })
-                : "—";
+                : null;
 
               return (
                 <div key={account.id} className="atlas-card p-4 flex items-center gap-4">
@@ -282,10 +294,12 @@ export default function Accounts() {
                     <p className="font-bold tabular-nums text-foreground">
                       {formatCurrency(account.balance, account.currency)}
                     </p>
-                    <div className="flex items-center justify-end gap-1 mt-0.5">
-                      <RefreshCw className="h-2.5 w-2.5 text-muted-foreground" />
-                      <span className="text-[10px] text-muted-foreground">{syncLabel}</span>
-                    </div>
+                    {!isManual && syncLabel && (
+                      <div className="flex items-center justify-end gap-1 mt-0.5">
+                        <RefreshCw className="h-2.5 w-2.5 text-muted-foreground" />
+                        <span className="text-[10px] text-muted-foreground">{syncLabel}</span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-1 flex-shrink-0">
