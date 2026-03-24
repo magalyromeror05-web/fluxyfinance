@@ -359,6 +359,51 @@ export type Database = {
           },
         ]
       }
+      simulations: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          currency: string
+          duration_type: string | null
+          duration_value: number | null
+          id: string
+          metadata: Json | null
+          monthly_amount: number
+          name: string
+          status: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          currency?: string
+          duration_type?: string | null
+          duration_value?: number | null
+          id?: string
+          metadata?: Json | null
+          monthly_amount: number
+          name: string
+          status?: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          currency?: string
+          duration_type?: string | null
+          duration_value?: number | null
+          id?: string
+          metadata?: Json | null
+          monthly_amount?: number
+          name?: string
+          status?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       transactions: {
         Row: {
           account_id: string | null

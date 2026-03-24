@@ -16,6 +16,7 @@ import Rules from "@/pages/Rules";
 import Contracts from "@/pages/Contracts";
 import Connections from "@/pages/Connections";
 import Budgets from "@/pages/Budgets";
+import Simulator from "@/pages/Simulator";
 import Projection from "@/pages/Projection";
 import FinancialHealth from "@/pages/FinancialHealth";
 import Auth from "@/pages/Auth";
@@ -52,6 +53,7 @@ const App = () => (
               <Route path="/movimentos" element={<Transactions />} />
               <Route path="/categorias" element={<Categories />} />
               <Route path="/orcamentos" element={<Budgets />} />
+              <Route path="/simulador" element={<Simulator />} />
               <Route path="/projecao" element={<Projection />} />
               <Route path="/saude-financeira" element={<FinancialHealth />} />
               <Route path="/regras" element={<Rules />} />
