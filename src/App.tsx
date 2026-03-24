@@ -17,6 +17,7 @@ import Contracts from "@/pages/Contracts";
 import Connections from "@/pages/Connections";
 import Budgets from "@/pages/Budgets";
 import Projection from "@/pages/Projection";
+import FinancialHealth from "@/pages/FinancialHealth";
 import Auth from "@/pages/Auth";
 import NotFound from "./pages/NotFound";
 
