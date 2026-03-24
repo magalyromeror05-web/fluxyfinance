@@ -156,7 +156,7 @@ const FluxyLogo = ({ className = "h-8" }: { className?: string }) => (
     </defs>
     <circle cx="16" cy="16" r="14" fill="url(#fluxy-grad)" />
     <path d="M10 12h12M10 16h8M10 20h10" stroke="white" strokeWidth="2" strokeLinecap="round" />
-    <text x="38" y="23" fontFamily="'Inter', sans-serif" fontWeight="800" fontSize="20" fill="currentColor">
+    <text x="38" y="23" fontFamily="'Plus Jakarta Sans', sans-serif" fontWeight="800" fontSize="20" fill="currentColor">
       Fluxy
     </text>
   </svg>
