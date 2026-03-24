@@ -18,8 +18,10 @@ import {
   Star,
   BookOpen,
   PieChart,
+  Settings,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAdmin } from "@/hooks/useAdmin";
 import fluxyLogo from "@/assets/fluxy-logo.png";
 import { Separator } from "@/components/ui/separator";
 
@@ -47,6 +49,7 @@ const secondaryItems = [
 
 export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
   const { user, signOut } = useAuth();
+  const { isAdmin } = useAdmin();
 
   const fullName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuário";
   const email = user?.email || "";
@@ -107,6 +110,18 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
 
       {/* Footer */}
       <div className="px-4 py-4 border-t border-[hsl(var(--sidebar-border))] space-y-3">
+        {/* Admin link */}
+        {isAdmin && (
+          <NavLink
+            to="/admin"
+            onClick={onNavigate}
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-[hsl(var(--sidebar-foreground))] opacity-60 hover:opacity-100 hover:bg-[hsl(var(--sidebar-accent))] transition-colors"
+          >
+            <Settings className="h-3.5 w-3.5" />
+            <span>🔧 Painel Admin</span>
+          </NavLink>
+        )}
+
         {/* Upgrade button */}
         <NavLink
           to="/planos"
