@@ -26,6 +26,7 @@ import Goals from "@/pages/Goals";
 import Reports from "@/pages/Reports";
 import Converter from "@/pages/Converter";
 import Auth from "@/pages/Auth";
+import ResetPassword from "@/pages/ResetPassword";
 import Plans from "@/pages/Plans";
 import NotFound from "./pages/NotFound";
 
@@ -42,6 +43,7 @@ const App = () => (
             {/* Rotas públicas */}
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/auth/reset-password" element={<ResetPassword />} />
             <Route path="/planos" element={<Plans />} />
 
             {/* Rotas protegidas */}
