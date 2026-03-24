@@ -1,4 +1,5 @@
 import { useState } from "react";
+import fluxyLogo from "@/assets/fluxy-logo.png";
 import {
   Accordion,
   AccordionContent,
