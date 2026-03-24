@@ -67,6 +67,27 @@ export type Database = {
           },
         ]
       }
+      admins: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       budgets: {
         Row: {
           amount: number
@@ -291,6 +312,39 @@ export type Database = {
         }
         Relationships: []
       }
+      error_logs: {
+        Row: {
+          created_at: string
+          error_message: string
+          error_stack: string | null
+          id: string
+          metadata: Json | null
+          page: string | null
+          severity: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          error_message: string
+          error_stack?: string | null
+          id?: string
+          metadata?: Json | null
+          page?: string | null
+          severity?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          error_message?: string
+          error_stack?: string | null
+          id?: string
+          metadata?: Json | null
+          page?: string | null
+          severity?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       goals: {
         Row: {
           color: string | null
@@ -446,24 +500,30 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          last_active_at: string | null
           monthly_income_brl: number | null
           onboarding_completed: boolean
+          plan: string
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
           full_name?: string | null
           id: string
+          last_active_at?: string | null
           monthly_income_brl?: number | null
           onboarding_completed?: boolean
+          plan?: string
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
           full_name?: string | null
           id?: string
+          last_active_at?: string | null
           monthly_income_brl?: number | null
           onboarding_completed?: boolean
+          plan?: string
         }
         Relationships: []
       }
@@ -666,7 +726,83 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_count_active_goals: { Args: { p_user_id: string }; Returns: number }
+      admin_count_table: { Args: { table_name: string }; Returns: number }
+      admin_count_user_table: {
+        Args: { p_user_id: string; table_name: string }
+        Returns: number
+      }
+      admin_get_all_profiles: {
+        Args: never
+        Returns: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          last_active_at: string | null
+          monthly_income_brl: number | null
+          onboarding_completed: boolean
+          plan: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      admin_get_user_accounts: {
+        Args: { p_user_id: string }
+        Returns: {
+          account_name: string
+          balance: number
+          connection_id: string | null
+          created_at: string
+          currency: string
+          id: string
+          institution_name: string
+          last_sync_at: string | null
+          provider_account_id: string | null
+          status: string
+          type: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "accounts"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      admin_get_user_transactions: {
+        Args: { p_limit?: number; p_user_id: string }
+        Returns: {
+          account_id: string | null
+          amount: number
+          category_id: string | null
+          category_source: string
+          connection_id: string | null
+          created_at: string
+          currency: string
+          description_raw: string | null
+          external_transaction_id: string | null
+          id: string
+          institution_name: string | null
+          merchant: string
+          posted_at: string
+          raw: Json | null
+          source: string
+          status: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "transactions"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

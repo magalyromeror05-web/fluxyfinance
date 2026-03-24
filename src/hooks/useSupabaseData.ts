@@ -2,6 +2,22 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import type { DbAccount, DbTransaction, DbConnection } from "@/types/database";
+import { useEffect } from "react";
+
+function useTrackActivity() {
+  const { user } = useAuth();
+  useEffect(() => {
+    if (!user?.id) return;
+    const key = "fluxy_activity_updated";
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, "1");
+    supabase
+      .from("profiles")
+      .update({ last_active_at: new Date().toISOString() })
+      .eq("id", user.id)
+      .then(() => {});
+  }, [user?.id]);
+}
 
 export function useAccounts() {
   const { user } = useAuth();
@@ -58,6 +74,7 @@ export function useConnections() {
 }
 
 export function useSupabaseData() {
+  useTrackActivity();
   const accounts = useAccounts();
   const transactions = useTransactions();
   const connections = useConnections();
