@@ -10,6 +10,7 @@ import { AppLayout } from "@/components/AppLayout";
 import Index from "@/pages/Index";
 import Dashboard from "@/pages/Dashboard";
 import Accounts from "@/pages/Accounts";
+import Investments from "@/pages/Investments";
 import Transactions from "@/pages/Transactions";
 import Categories from "@/pages/Categories";
 import Rules from "@/pages/Rules";
