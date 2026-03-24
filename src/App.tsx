@@ -26,6 +26,7 @@ import Goals from "@/pages/Goals";
 import Reports from "@/pages/Reports";
 import Converter from "@/pages/Converter";
 import Auth from "@/pages/Auth";
+import ResetPassword from "@/pages/ResetPassword";
 import Plans from "@/pages/Plans";
 import NotFound from "./pages/NotFound";
 
