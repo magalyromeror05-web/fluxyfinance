@@ -793,9 +793,18 @@ export default function Budgets() {
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="global">🌐 Global (todas)</SelectItem>
-                    {expenseCategories.map(c => <SelectItem key={c.id} value={c.id}>{c.icon} {c.name}</SelectItem>)}
+                    {hierarchicalExpenseCategories.map(c => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.isChild ? `    └ ${c.icon} ${c.name}` : `${c.icon} ${c.name}`}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
+                {categoryId !== "global" && parentCategoriesWithChildren.has(categoryId) && (
+                  <p className="text-[10px] text-amber-600 mt-1">
+                    💡 Dica: considere selecionar uma subcategoria para controle mais preciso
+                  </p>
+                )}
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
