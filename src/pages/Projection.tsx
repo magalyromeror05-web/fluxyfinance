@@ -98,10 +98,11 @@ export default function Projection() {
       const now = new Date();
       const month = format(now, "yyyy-MM");
 
-      const [profileRes, budgetsRes, categoriesRes] = await Promise.all([
+      const [profileRes, budgetsRes, categoriesRes, investmentsRes] = await Promise.all([
         supabase.from("profiles").select("monthly_income_brl").eq("id", user.id).single(),
         supabase.from("budgets").select("amount, currency, category_id").eq("period_month", month).eq("currency", "BRL"),
         supabase.from("categories").select("id, type"),
+        supabase.from("investments").select("current_value, currency"),
       ]);
 
       // Income
@@ -134,6 +135,15 @@ export default function Projection() {
       }
 
       setLoaded(true);
+
+      // Investments current_value added to wealth (after loaded)
+      if (investmentsRes.data) {
+        const invWealth = (investmentsRes.data as any[])
+          .filter(i => i.currency === "BRL")
+          .reduce((s, i) => s + (i.current_value || 0), 0);
+        // Will be added to account-based wealth below
+        setWealth(prev => prev + invWealth);
+      }
     })();
   }, [user]);
 
