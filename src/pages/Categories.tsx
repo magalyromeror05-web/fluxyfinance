@@ -15,6 +15,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { EmojiPicker } from "@/components/EmojiPicker";
 
 interface DbCategory {
   id: string;
@@ -25,8 +26,6 @@ interface DbCategory {
   icon: string;
   created_at: string;
 }
-
-const ICON_OPTIONS = ["📁", "🏠", "🍽️", "🚗", "📺", "💰", "💼", "🎯", "🛒", "🎬", "💻", "⚡", "🏗️", "📱", "↔️", "💸", "🎓", "🏥", "✈️", "🎮", "👕", "🐾"];
 
 const ALL = "ALL" as const;
 type Filter = Currency | typeof ALL;
