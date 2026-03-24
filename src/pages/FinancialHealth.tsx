@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AiTipsCard } from "@/components/AiTipsCard";
+import { TipBanner } from "@/components/TipBanner";
 import { cn } from "@/lib/utils";
 import type { FinancialSnapshot } from "@/lib/aiTips";
 
