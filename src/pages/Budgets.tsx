@@ -13,11 +13,14 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { CurrencyBadge } from "@/components/CurrencyBadge";
 import { formatCurrency, type Currency } from "@/data/mockData";
 import { BENCHMARK_GROUPS, getHealthyPercent } from "@/data/healthyBudget";
+import { getBenchmarkTooltip } from "@/data/financialTips";
 import { Plus, Pencil, Trash2, Target, Wallet, Copy, DollarSign, CheckCircle, AlertTriangle, XCircle } from "lucide-react";
 import { BudgetSpreadsheet } from "@/components/BudgetSpreadsheet";
+import { TipBanner } from "@/components/TipBanner";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { format, endOfMonth, addMonths, subMonths, parse } from "date-fns";
