@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/AppSidebar";
+import { QuickAddButton } from "@/components/QuickAddButton";
 import { Outlet } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
@@ -31,6 +32,7 @@ export function AppLayout() {
         <main className="flex-1 overflow-y-auto">
           <Outlet />
         </main>
+        <QuickAddButton />
       </div>
     );
   }
@@ -41,6 +43,7 @@ export function AppLayout() {
       <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>
+      <QuickAddButton />
     </div>
   );
 }
