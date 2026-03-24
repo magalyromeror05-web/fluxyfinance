@@ -28,7 +28,7 @@ const mainItems = [
   { label: "Metas", href: "/metas", icon: Target },
   { label: "Movimentos", href: "/movimentos", icon: ArrowLeftRight },
   { label: "Categorias", href: "/categorias", icon: Tags },
-  { label: "Orçamentos", href: "/orcamentos", icon: Target },
+  { label: "Orçamentos", href: "/orcamentos", icon: PieChart },
   { label: "Simulador", href: "/simulador", icon: Calculator },
   { label: "Projeção", href: "/projecao", icon: TrendingUp },
   { label: "Saúde", href: "/saude-financeira", icon: Heart },
