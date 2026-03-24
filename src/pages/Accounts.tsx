@@ -232,7 +232,7 @@ export default function Accounts() {
       ) : (
         <>
           {/* Summary cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-4">
             {userCurrencies.map((cur) => (
               <div key={cur} className="atlas-card p-4">
                 <CurrencyBadge currency={cur as any} size="sm" />
@@ -245,6 +245,22 @@ export default function Accounts() {
               </div>
             ))}
           </div>
+
+          {/* Consolidated total in BRL */}
+          {userCurrencies.length > 1 && (
+            <div className="atlas-card p-4 mb-6 bg-primary/5 border-primary/10">
+              <p className="text-xs font-medium text-muted-foreground mb-1">Patrimônio total em BRL</p>
+              <p className="text-2xl font-bold tabular-nums text-foreground">
+                {formatCurrency(
+                  accounts.reduce((s, a) => s + convert(a.balance, a.currency, "BRL"), 0),
+                  "BRL"
+                )}
+              </p>
+              <p className="text-[10px] text-muted-foreground mt-1">
+                {ratesStale ? "⚠️ Cotação pode estar desatualizada" : "Conversão aproximada baseada na cotação do momento"}
+              </p>
+            </div>
+          )}
 
           {/* Filter */}
           <div className="flex gap-2 mb-6 flex-wrap">
