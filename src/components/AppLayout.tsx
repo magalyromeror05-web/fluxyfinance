@@ -54,6 +54,7 @@ export function AppLayout() {
       <AppSidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="flex items-center justify-end px-6 py-3 border-b border-border bg-card flex-shrink-0">
+          <CurrencyConverterPopover />
           <NotificationCenter />
         </header>
         <main className="flex-1 overflow-y-auto">
