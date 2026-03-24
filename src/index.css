@@ -7,34 +7,34 @@
 @layer base {
   :root {
     /* Base surfaces */
-    --background: 214 32% 96%;
-    --foreground: 218 30% 12%;
+    --background: 228 38% 97%;
+    --foreground: 249 37% 17%;
 
     --card: 0 0% 100%;
-    --card-foreground: 218 30% 12%;
+    --card-foreground: 249 37% 17%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 218 30% 12%;
+    --popover-foreground: 249 37% 17%;
 
     /* Purple primary */
-    --primary: 262 60% 52%;
+    --primary: 245 75% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 250 20% 94%;
-    --secondary-foreground: 250 30% 20%;
+    --secondary: 228 30% 94%;
+    --secondary-foreground: 249 37% 17%;
 
-    --muted: 250 20% 94%;
-    --muted-foreground: 250 12% 48%;
+    --muted: 228 24% 92%;
+    --muted-foreground: 215 28% 27%;
 
-    --accent: 230 70% 56%;
+    --accent: 216 59% 45%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 54%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 22% 88%;
-    --input: 214 22% 88%;
-    --ring: 262 60% 52%;
+    --border: 228 24% 92%;
+    --input: 228 24% 92%;
+    --ring: 245 75% 60%;
 
     --radius: 0.75rem;
 
@@ -43,9 +43,9 @@
     --brl-light: 152 56% 96%;
     --brl-foreground: 152 56% 20%;
 
-    --usd: 211 80% 46%;
-    --usd-light: 211 80% 96%;
-    --usd-foreground: 211 80% 20%;
+    --usd: 216 59% 45%;
+    --usd-light: 216 59% 96%;
+    --usd-foreground: 216 59% 20%;
 
     --pyg: 35 90% 48%;
     --pyg-light: 35 90% 96%;
@@ -65,18 +65,18 @@
     --disconnected: 0 72% 54%;
 
     /* Sidebar */
-    --sidebar-background: 262 50% 18%;
-    --sidebar-foreground: 260 30% 80%;
-    --sidebar-primary: 262 60% 52%;
+    --sidebar-background: 249 37% 17%;
+    --sidebar-foreground: 245 30% 80%;
+    --sidebar-primary: 245 75% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 262 40% 26%;
-    --sidebar-accent-foreground: 260 30% 92%;
-    --sidebar-border: 262 40% 24%;
-    --sidebar-ring: 262 60% 52%;
+    --sidebar-accent: 249 30% 26%;
+    --sidebar-accent-foreground: 245 30% 92%;
+    --sidebar-border: 249 30% 24%;
+    --sidebar-ring: 245 75% 60%;
 
     /* Shadows */
-    --shadow-card: 0 1px 3px hsl(262 30% 12% / 0.06), 0 4px 16px hsl(262 30% 12% / 0.05);
-    --shadow-elevated: 0 4px 12px hsl(262 30% 12% / 0.10), 0 12px 40px hsl(262 30% 12% / 0.08);
+    --shadow-card: 0 1px 3px hsl(249 37% 17% / 0.06), 0 4px 16px hsl(249 37% 17% / 0.05);
+    --shadow-elevated: 0 4px 12px hsl(249 37% 17% / 0.10), 0 12px 40px hsl(249 37% 17% / 0.08);
   }
 }
 
