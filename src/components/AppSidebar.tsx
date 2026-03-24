@@ -24,6 +24,7 @@ const mainItems = [
   { label: "Movimentos", href: "/movimentos", icon: ArrowLeftRight },
   { label: "Categorias", href: "/categorias", icon: Tags },
   { label: "Orçamentos", href: "/orcamentos", icon: Target },
+  { label: "Simulador", href: "/simulador", icon: Calculator },
   { label: "Projeção", href: "/projecao", icon: TrendingUp },
   { label: "Saúde", href: "/saude-financeira", icon: Heart },
 ];
