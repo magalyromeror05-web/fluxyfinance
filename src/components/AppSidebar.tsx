@@ -24,6 +24,7 @@ const mainItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Contas", href: "/contas", icon: CreditCard },
   { label: "Investimentos", href: "/investimentos", icon: Landmark },
+  { label: "Metas", href: "/metas", icon: Target },
   { label: "Movimentos", href: "/movimentos", icon: ArrowLeftRight },
   { label: "Categorias", href: "/categorias", icon: Tags },
   { label: "Orçamentos", href: "/orcamentos", icon: Target },
