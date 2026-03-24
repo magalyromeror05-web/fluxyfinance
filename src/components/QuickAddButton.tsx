@@ -34,6 +34,7 @@ export function QuickAddButton() {
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
+  const { convert } = useExchangeRates();
 
   // Data
   const [categories, setCategories] = useState<Cat[]>([]);
