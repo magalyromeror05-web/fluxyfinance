@@ -199,7 +199,7 @@ export default function Investments() {
         </Button>
       </div>
 
-      <TipBanner page="investimentos" userContext={{ hasEmergencyFund: emergencyTotal > 0 }} />
+      <TipBanner page="investimentos" userContext={{ hasEmergencyFund: emergencyFund > 0 }} />
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
