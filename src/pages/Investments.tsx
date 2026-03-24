@@ -51,7 +51,7 @@ const TYPE_OPTIONS = [
 
 const typeInfo = (t: string) => TYPE_OPTIONS.find(o => o.value === t) || { value: t, label: t, icon: "📊", desc: "" };
 
-const CURRENCIES: Currency[] = ["BRL", "USD", "EUR"];
+const CURRENCIES = ["BRL", "USD", "EUR"] as const;
 
 export default function Investments() {
   const { user } = useAuth();
