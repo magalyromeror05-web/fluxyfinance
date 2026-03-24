@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/AppSidebar";
+import { QuickAddButton } from "@/components/QuickAddButton";
 import { Outlet } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
