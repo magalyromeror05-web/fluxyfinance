@@ -2,7 +2,6 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useState } from "react";
 import Onboarding from "@/components/Onboarding";
 
 interface OnboardingGuardProps {
@@ -12,7 +11,7 @@ interface OnboardingGuardProps {
 export function OnboardingGuard({ children }: OnboardingGuardProps) {
   const { user, loading: authLoading } = useAuth();
 
-  const { data: profile, isLoading: profileLoading } = useQuery({
+  const { data: profile, isLoading: profileLoading, isError } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -24,6 +23,8 @@ export function OnboardingGuard({ children }: OnboardingGuardProps) {
       return data;
     },
     enabled: !!user,
+    staleTime: 1000 * 60 * 5,
+    retry: 2,
   });
 
   if (authLoading || profileLoading) {
@@ -41,8 +42,13 @@ export function OnboardingGuard({ children }: OnboardingGuardProps) {
     return <Navigate to="/auth" replace />;
   }
 
-  // Show onboarding if not completed
-  if (profile && !(profile as any).onboarding_completed) {
+  // Don't block on errors — let user through
+  if (isError || !profile) {
+    return <>{children}</>;
+  }
+
+  // Show onboarding only if explicitly false
+  if (profile.onboarding_completed === false) {
     return <Onboarding />;
   }
 
