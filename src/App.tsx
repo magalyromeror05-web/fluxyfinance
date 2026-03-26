@@ -34,6 +34,7 @@ import Plans from "@/pages/Plans";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import AdminUsers from "@/pages/admin/AdminUsers";
 import AdminLogs from "@/pages/admin/AdminLogs";
+import AdminEmails from "@/pages/admin/AdminEmails";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
