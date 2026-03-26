@@ -312,6 +312,134 @@ export type Database = {
         }
         Relationships: []
       }
+      email_campaigns: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          failed_count: number | null
+          id: string
+          name: string
+          scheduled_at: string | null
+          sent_count: number | null
+          status: string | null
+          target: string
+          template_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          failed_count?: number | null
+          id?: string
+          name: string
+          scheduled_at?: string | null
+          sent_count?: number | null
+          status?: string | null
+          target?: string
+          template_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          failed_count?: number | null
+          id?: string
+          name?: string
+          scheduled_at?: string | null
+          sent_count?: number | null
+          status?: string | null
+          target?: string
+          template_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_campaigns_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "email_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_logs: {
+        Row: {
+          error_message: string | null
+          id: string
+          metadata: Json | null
+          recipient_email: string
+          resend_id: string | null
+          sent_at: string | null
+          status: string | null
+          subject: string
+          template_type: string
+          user_id: string | null
+        }
+        Insert: {
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          recipient_email: string
+          resend_id?: string | null
+          sent_at?: string | null
+          status?: string | null
+          subject: string
+          template_type: string
+          user_id?: string | null
+        }
+        Update: {
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          recipient_email?: string
+          resend_id?: string | null
+          sent_at?: string | null
+          status?: string | null
+          subject?: string
+          template_type?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      email_templates: {
+        Row: {
+          active: boolean | null
+          body_html: string
+          body_text: string
+          created_at: string | null
+          id: string
+          last_edited_by: string | null
+          name: string
+          subject: string
+          type: string
+          updated_at: string | null
+          variables: Json | null
+        }
+        Insert: {
+          active?: boolean | null
+          body_html?: string
+          body_text?: string
+          created_at?: string | null
+          id?: string
+          last_edited_by?: string | null
+          name: string
+          subject: string
+          type: string
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          active?: boolean | null
+          body_html?: string
+          body_text?: string
+          created_at?: string | null
+          id?: string
+          last_edited_by?: string | null
+          name?: string
+          subject?: string
+          type?: string
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Relationships: []
+      }
       error_logs: {
         Row: {
           created_at: string
