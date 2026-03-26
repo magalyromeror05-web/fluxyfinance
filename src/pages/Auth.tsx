@@ -56,12 +56,12 @@ export default function Auth() {
         const { error } = await signIn(email, password);
         if (error) setError(translateError(error.message));
       } else if (mode === "signup") {
-        const { error, data } = await signUp(email, password, fullName);
+        const { error } = await signUp(email, password, fullName);
         if (error) {
           setError(translateError(error.message));
-        } else if (data?.user) {
-          // Fire-and-forget welcome email
-          emailService.sendWelcome(email, fullName, data.user.id).catch(() => {});
+        } else {
+          // Fire-and-forget welcome email (user may not be confirmed yet, but log the intent)
+          emailService.sendWelcome(email, fullName, "").catch(() => {});
         }
       }
     } finally {
