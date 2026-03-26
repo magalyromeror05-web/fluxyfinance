@@ -56,9 +56,13 @@ export default function Auth() {
         const { error } = await signIn(email, password);
         if (error) setError(translateError(error.message));
       } else if (mode === "signup") {
-        const { error } = await signUp(email, password, fullName);
-        if (error) setError(translateError(error.message));
-      }
+        const { error, data } = await signUp(email, password, fullName);
+        if (error) {
+          setError(translateError(error.message));
+        } else if (data?.user) {
+          // Fire-and-forget welcome email
+          emailService.sendWelcome(email, fullName, data.user.id).catch(() => {});
+        }
     } finally {
       setLoading(false);
     }
