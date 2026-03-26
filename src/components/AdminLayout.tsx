@@ -1,6 +1,6 @@
 import { NavLink } from "@/components/NavLink";
 import { Outlet, useNavigate } from "react-router-dom";
-import { BarChart3, Users, AlertTriangle, ArrowLeft } from "lucide-react";
+import { BarChart3, Users, AlertTriangle, Mail, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import fluxyLogo from "@/assets/fluxy-logo.png";
 import { Separator } from "@/components/ui/separator";
@@ -9,6 +9,7 @@ const adminItems = [
   { label: "Visão geral", href: "/admin", icon: BarChart3 },
   { label: "Usuários", href: "/admin/usuarios", icon: Users },
   { label: "Logs de erro", href: "/admin/logs", icon: AlertTriangle },
+  { label: "Emails", href: "/admin/emails", icon: Mail },
 ];
 
 export function AdminLayout() {

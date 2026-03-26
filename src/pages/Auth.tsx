@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { emailService } from "@/lib/emailService";
 
 type Mode = "login" | "signup" | "forgot" | "forgot-sent";
 
@@ -56,7 +57,12 @@ export default function Auth() {
         if (error) setError(translateError(error.message));
       } else if (mode === "signup") {
         const { error } = await signUp(email, password, fullName);
-        if (error) setError(translateError(error.message));
+        if (error) {
+          setError(translateError(error.message));
+        } else {
+          // Fire-and-forget welcome email (user may not be confirmed yet, but log the intent)
+          emailService.sendWelcome(email, fullName, "").catch(() => {});
+        }
       }
     } finally {
       setLoading(false);
