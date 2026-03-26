@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { emailService } from "@/lib/emailService";
 
 const LAST_CHECK_KEY = "fluxy_last_notification_check";
 const CHECK_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
