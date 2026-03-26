@@ -69,6 +69,18 @@ export async function checkBudgetAlerts(userId: string) {
           action_url: "/orcamentos",
           metadata: { category_id: budget.category_id, pct: Math.round(pct) },
         });
+        // Fire-and-forget email for alerts >= 90%
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user?.email) {
+          const { data: profile } = await supabase.from("profiles").select("full_name").eq("id", userId).maybeSingle();
+          const monthNames = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+          emailService.sendBudgetAlert(
+            user.email, profile?.full_name ?? "Usuário", userId,
+            catName, String(Math.round(pct)),
+            spent.toFixed(2), budget.amount.toFixed(2),
+            monthNames[now.getMonth()]
+          ).catch(() => {});
+        }
       }
     } else if (pct >= 80) {
       const exists = await notificationExists(userId, "budget_alert", "category_id", budget.category_id, monthStr);
@@ -81,6 +93,20 @@ export async function checkBudgetAlerts(userId: string) {
           action_url: "/orcamentos",
           metadata: { category_id: budget.category_id, pct: Math.round(pct) },
         });
+        // Email for 90%+ alerts
+        if (pct >= 90) {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user?.email) {
+            const { data: profile } = await supabase.from("profiles").select("full_name").eq("id", userId).maybeSingle();
+            const monthNames = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+            emailService.sendBudgetAlert(
+              user.email, profile?.full_name ?? "Usuário", userId,
+              catName, String(Math.round(pct)),
+              spent.toFixed(2), budget.amount.toFixed(2),
+              monthNames[now.getMonth()]
+            ).catch(() => {});
+          }
+        }
       }
     }
   }
