@@ -63,6 +63,7 @@ export default function Auth() {
           // Fire-and-forget welcome email
           emailService.sendWelcome(email, fullName, data.user.id).catch(() => {});
         }
+      }
     } finally {
       setLoading(false);
     }
