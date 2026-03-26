@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { emailService } from "@/lib/emailService";
 
 type Mode = "login" | "signup" | "forgot" | "forgot-sent";
 
