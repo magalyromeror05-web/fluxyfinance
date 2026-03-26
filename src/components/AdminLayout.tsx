@@ -9,6 +9,7 @@ const adminItems = [
   { label: "Visão geral", href: "/admin", icon: BarChart3 },
   { label: "Usuários", href: "/admin/usuarios", icon: Users },
   { label: "Logs de erro", href: "/admin/logs", icon: AlertTriangle },
+  { label: "Emails", href: "/admin/emails", icon: Mail },
 ];
 
 export function AdminLayout() {
