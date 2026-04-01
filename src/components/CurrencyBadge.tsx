@@ -25,7 +25,7 @@ export function CurrencyBadge({ currency, size = "md", className }: CurrencyBadg
         className
       )}
     >
-      <span>{flag}</span>
+      <span>{info.flag}</span>
       <span>{currency}</span>
     </span>
   );
