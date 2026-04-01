@@ -1,14 +1,8 @@
 import { cn } from "@/lib/utils";
-import type { Currency } from "@/data/mockData";
-import { CURRENCY_LABELS } from "@/data/mockData";
+import type { Currency } from "@/types/database";
+import { CURRENCY_LABELS } from "@/types/database";
 
-interface CurrencyBadgeProps {
-  currency: Currency;
-  size?: "sm" | "md";
-  className?: string;
-}
-
-const colorMap: Record<Currency, string> = {
+const colorMap: Record<string, string> = {
   BRL: "badge-brl",
   USD: "badge-usd",
   PYG: "badge-pyg",

@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { CurrencyBadge } from "@/components/CurrencyBadge";
-import { formatCurrency, type Currency } from "@/data/mockData";
+import { formatCurrency, type Currency } from "@/types/database";
 import { BENCHMARK_GROUPS, getHealthyPercent } from "@/data/healthyBudget";
 import { getBenchmarkTooltip } from "@/data/financialTips";
 import { Plus, Pencil, Trash2, Target, Wallet, Copy, DollarSign, CheckCircle, AlertTriangle, XCircle } from "lucide-react";
