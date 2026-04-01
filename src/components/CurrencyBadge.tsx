@@ -8,8 +8,14 @@ const colorMap: Record<string, string> = {
   PYG: "badge-pyg",
 };
 
+interface CurrencyBadgeProps {
+  currency: string;
+  size?: "sm" | "md";
+  className?: string;
+}
+
 export function CurrencyBadge({ currency, size = "md", className }: CurrencyBadgeProps) {
-  const { flag, symbol } = CURRENCY_LABELS[currency];
+  const info = CURRENCY_LABELS[currency] || { flag: "🌐", symbol: currency };
   return (
     <span
       className={cn(
