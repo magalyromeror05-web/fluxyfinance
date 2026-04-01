@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/sheet";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { formatCurrency, type Currency } from "@/data/mockData";
+import { formatCurrency, type Currency } from "@/types/database";
 import { Plus, Pencil, Trash2, TrendingUp, CalendarIcon, Shield } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";

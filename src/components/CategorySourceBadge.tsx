@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import type { CategorySource } from "@/data/mockData";
+import type { CategorySource } from "@/types/database";
 
 const sourceConfig: Record<CategorySource, { label: string; className: string }> = {
   provider: { label: "Banco", className: "bg-blue-50 text-blue-700 border-blue-200" },

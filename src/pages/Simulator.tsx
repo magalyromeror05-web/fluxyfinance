@@ -14,7 +14,7 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
-import { formatCurrency as baseFormatCurrency, type Currency } from "@/data/mockData";
+import { formatCurrency as baseFormatCurrency, type Currency } from "@/types/database";
 import {
   calcPrice, calcPriceSchedule, calcSACSchedule,
   SIM_TYPE_META, getDiagnosisInfo,

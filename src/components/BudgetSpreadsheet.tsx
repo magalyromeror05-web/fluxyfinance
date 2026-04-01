@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { formatCurrency } from "@/data/mockData";
+import { formatCurrency } from "@/types/database";
 import { Copy, Download, FileText, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";

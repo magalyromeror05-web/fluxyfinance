@@ -1,21 +1,21 @@
 import { cn } from "@/lib/utils";
-import type { Currency } from "@/data/mockData";
-import { CURRENCY_LABELS } from "@/data/mockData";
+import type { Currency } from "@/types/database";
+import { CURRENCY_LABELS } from "@/types/database";
 
-interface CurrencyBadgeProps {
-  currency: Currency;
-  size?: "sm" | "md";
-  className?: string;
-}
-
-const colorMap: Record<Currency, string> = {
+const colorMap: Record<string, string> = {
   BRL: "badge-brl",
   USD: "badge-usd",
   PYG: "badge-pyg",
 };
 
+interface CurrencyBadgeProps {
+  currency: string;
+  size?: "sm" | "md";
+  className?: string;
+}
+
 export function CurrencyBadge({ currency, size = "md", className }: CurrencyBadgeProps) {
-  const { flag, symbol } = CURRENCY_LABELS[currency];
+  const info = CURRENCY_LABELS[currency] || { flag: "🌐", symbol: currency };
   return (
     <span
       className={cn(
@@ -25,7 +25,7 @@ export function CurrencyBadge({ currency, size = "md", className }: CurrencyBadg
         className
       )}
     >
-      <span>{flag}</span>
+      <span>{info.flag}</span>
       <span>{currency}</span>
     </span>
   );
