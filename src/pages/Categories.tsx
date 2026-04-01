@@ -33,6 +33,7 @@ type Filter = Currency | typeof ALL;
 export default function Categories() {
   const { user } = useAuth();
   const [categories, setCategories] = useState<DbCategory[]>([]);
+  const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<Filter>(ALL);
   const [expanded, setExpanded] = useState<string[]>([]);
@@ -47,21 +48,24 @@ export default function Categories() {
 
   const currencies: Currency[] = ["BRL", "USD", "PYG"];
 
-  const fetchCategories = async () => {
-    const { data, error } = await supabase
-      .from("categories")
-      .select("*")
-      .order("created_at", { ascending: true });
-    if (error) {
+  const fetchData = async () => {
+    const [catRes, txRes] = await Promise.all([
+      supabase.from("categories").select("*").order("created_at", { ascending: true }),
+      supabase.from("transactions").select("id, amount, currency, category_id"),
+    ]);
+    if (catRes.error) {
       toast.error("Erro ao carregar categorias");
-      console.error(error);
+      console.error(catRes.error);
     } else {
-      setCategories((data as DbCategory[]) || []);
+      setCategories((catRes.data as DbCategory[]) || []);
     }
+    setTransactions(txRes.data || []);
     setLoading(false);
   };
 
-  useEffect(() => { fetchCategories(); }, []);
+  const fetchCategories = fetchData;
+
+  useEffect(() => { fetchData(); }, []);
 
   const topLevel = categories.filter(c => !c.parent_id);
   const getChildren = (pid: string) => categories.filter(c => c.parent_id === pid);
@@ -71,8 +75,8 @@ export default function Categories() {
 
   const getCategoryTotal = (categoryId: string, currency?: Currency) => {
     const childIds = [categoryId, ...categories.filter(c => c.parent_id === categoryId).map(c => c.id)];
-    return mockTransactions
-      .filter(t => childIds.includes(t.categoryId) && (currency ? t.currency === currency : true))
+    return transactions
+      .filter(t => childIds.includes(t.category_id) && (currency ? t.currency === currency : true))
       .reduce((s, t) => s + Math.abs(t.amount), 0);
   };
 
