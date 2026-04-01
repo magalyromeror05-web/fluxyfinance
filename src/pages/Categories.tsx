@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { CurrencyBadge } from "@/components/CurrencyBadge";
-import { mockTransactions, formatCurrency, type Currency } from "@/data/mockData";
+import { formatCurrency, type Currency } from "@/types/database";
 import { ChevronRight, Plus, Pencil, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
