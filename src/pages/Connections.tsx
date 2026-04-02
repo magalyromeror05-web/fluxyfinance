@@ -87,7 +87,7 @@ export default function Connections() {
         setLoading(false);
         return;
       }
-      const connectToken = data?.accessToken || data?.connectToken || data?.apiKey;
+      const connectToken = data?.connectToken;
       if (!connectToken) {
         toast.error("Token de conexão não recebido");
         setLoading(false);
@@ -98,9 +98,10 @@ export default function Connections() {
       await new Promise<void>((resolve, reject) => {
         if ((window as any).PluggyConnect) { resolve(); return; }
         const script = document.createElement("script");
-        script.src = "https://cdn.pluggy.ai/pluggy-connect/v2/pluggy-connect.js";
+        script.src = "https://cdn.pluggy.ai/pluggy-connect/v2.1.2/pluggy-connect.js";
+        script.crossOrigin = "anonymous";
         script.onload = () => resolve();
-        script.onerror = () => reject(new Error("Falha ao carregar Pluggy"));
+        script.onerror = () => reject(new Error("Falha ao carregar widget de conexão"));
         document.head.appendChild(script);
       });
 
@@ -113,7 +114,7 @@ export default function Connections() {
               .from("connections")
               .insert({
                 user_id: user.id,
-                provider: "Pluggy",
+                provider: "Open Finance",
                 provider_type: "open_finance",
                 country: "BR",
                 status: "connected",
@@ -185,14 +186,9 @@ export default function Connections() {
         </Button>
       </div>
 
-      {/* Dev banner */}
-      <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-200">
-        🔧 <strong>Modo desenvolvimento:</strong> usando sandbox da Pluggy.
-        Conecte uma conta real em{" "}
-        <a href="https://meu.pluggy.ai" target="_blank" rel="noopener" className="underline font-medium">
-          meu.pluggy.ai
-        </a>{" "}
-        para testar.
+      {/* Security banner */}
+      <div className="mb-6 rounded-xl border border-border bg-card p-3 text-xs text-muted-foreground">
+        🔒 <strong>Conexão segura</strong> via Open Finance regulado pelo Banco Central
       </div>
 
       {isLoading ? (

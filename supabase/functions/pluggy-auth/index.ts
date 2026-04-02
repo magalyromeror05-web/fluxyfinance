@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
       throw new Error("Pluggy credentials not configured");
     }
 
-    // Authenticate with Pluggy API
+    // 1. Authenticate with Pluggy API to get apiKey
     const authResponse = await fetch("https://api.pluggy.ai/auth", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
 
     const { apiKey } = await authResponse.json();
 
-    // Create a connect token for the widget
+    // 2. Create a connect token using the apiKey
     const connectResponse = await fetch("https://api.pluggy.ai/connect_token", {
       method: "POST",
       headers: {
@@ -51,7 +51,7 @@ Deno.serve(async (req) => {
     const { accessToken } = await connectResponse.json();
 
     return new Response(
-      JSON.stringify({ accessToken, apiKey }),
+      JSON.stringify({ connectToken: accessToken }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
