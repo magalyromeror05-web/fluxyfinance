@@ -87,7 +87,7 @@ export default function Connections() {
         setLoading(false);
         return;
       }
-      const connectToken = data?.accessToken || data?.connectToken || data?.apiKey;
+      const connectToken = data?.connectToken;
       if (!connectToken) {
         toast.error("Token de conexão não recebido");
         setLoading(false);
