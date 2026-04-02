@@ -98,9 +98,10 @@ export default function Connections() {
       await new Promise<void>((resolve, reject) => {
         if ((window as any).PluggyConnect) { resolve(); return; }
         const script = document.createElement("script");
-        script.src = "https://cdn.pluggy.ai/pluggy-connect/v2/pluggy-connect.js";
+        script.src = "https://cdn.pluggy.ai/pluggy-connect/v2.1.2/pluggy-connect.js";
+        script.crossOrigin = "anonymous";
         script.onload = () => resolve();
-        script.onerror = () => reject(new Error("Falha ao carregar Pluggy"));
+        script.onerror = () => reject(new Error("Falha ao carregar widget de conexão"));
         document.head.appendChild(script);
       });
 
