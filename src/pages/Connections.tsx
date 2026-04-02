@@ -114,7 +114,7 @@ export default function Connections() {
               .from("connections")
               .insert({
                 user_id: user.id,
-                provider: "Pluggy",
+                provider: "Open Finance",
                 provider_type: "open_finance",
                 country: "BR",
                 status: "connected",
