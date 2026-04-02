@@ -212,8 +212,8 @@ export default function Connections() {
             <p className="text-sm text-muted-foreground mb-6 max-w-sm">
               Conecte seu banco para importar transações automaticamente via Open Finance
             </p>
-            <Button onClick={handleConnectBank} disabled={connectingBank || !scriptLoaded}>
-              {connectingBank ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+            <Button onClick={handleConnectBank} disabled={loading}>
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
               Conectar primeiro banco
             </Button>
           </CardContent>
