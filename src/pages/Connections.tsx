@@ -80,35 +80,48 @@ export default function Connections() {
     setLoading(true);
 
     try {
-      // 1. Get Pluggy token
+      // Passo 1: obter token
+      console.log('Passo 1: obtendo token da pluggy-auth...');
       const { data, error } = await supabase.functions.invoke("pluggy-auth");
-      if (error || !data) {
-        toast.error("Erro ao obter token da Pluggy");
-        setLoading(false);
-        return;
-      }
-      const connectToken = data?.connectToken;
-      if (!connectToken) {
-        toast.error("Token de conexão não recebido");
+      console.log('Resposta pluggy-auth:', { data, error });
+
+      if (error || !data?.connectToken) {
+        console.error('Erro no token:', error, data);
+        toast.error("Erro ao obter token: " + (error?.message || "sem connectToken"));
         setLoading(false);
         return;
       }
 
-      // 2. Load Pluggy script dynamically
+      // Passo 2: carregar script
+      console.log('Passo 2: carregando script da Pluggy...');
+      console.log('connectToken obtido:', data.connectToken.substring(0, 20) + '...');
+
       await new Promise<void>((resolve, reject) => {
-        if ((window as any).PluggyConnect) { resolve(); return; }
+        if ((window as any).PluggyConnect) {
+          console.log('Script já carregado');
+          resolve();
+          return;
+        }
         const script = document.createElement("script");
         script.src = "https://cdn.pluggy.ai/pluggy-connect/v2.1.2/pluggy-connect.js";
         script.crossOrigin = "anonymous";
-        script.onload = () => resolve();
-        script.onerror = () => reject(new Error("Falha ao carregar widget de conexão"));
+        script.onload = () => {
+          console.log('Script carregado com sucesso');
+          resolve();
+        };
+        script.onerror = (e) => {
+          console.error('Erro ao carregar script:', e);
+          reject(new Error("Script bloqueado pelo navegador"));
+        };
         document.head.appendChild(script);
       });
 
-      // 3. Open widget
+      // Passo 3: abrir widget
+      console.log('Passo 3: abrindo widget...');
       const pluggyConnect = new (window as any).PluggyConnect({
-        connectToken,
+        connectToken: data.connectToken,
         onSuccess: async ({ item }: any) => {
+          console.log('Sucesso! Item:', item);
           try {
             const { data: conn, error: connErr } = await supabase
               .from("connections")
@@ -132,21 +145,26 @@ export default function Connections() {
               await handleSync(conn.id, item.id);
             }
           } catch (err: any) {
+            console.error('Erro ao salvar conexão:', err);
             toast.error("Erro ao salvar conexão: " + err.message);
           }
           setLoading(false);
         },
         onError: (err: any) => {
+          console.error('Erro no widget:', err);
           toast.error("Erro ao conectar: " + err.message);
           setLoading(false);
         },
         onClose: () => {
+          console.log('Widget fechado');
           setLoading(false);
         },
       });
 
       pluggyConnect.init();
+      setLoading(false);
     } catch (err: any) {
+      console.error('Erro geral:', err);
       toast.error("Erro: " + (err.message || "Tente novamente"));
       setLoading(false);
     }
