@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useConnections } from "@/hooks/useSupabaseData";
 import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import {
   CheckCircle2, AlertTriangle, XCircle, Plus, RefreshCw,
@@ -49,84 +49,67 @@ export default function Connections() {
   const { user } = useAuth();
   const { data: connections = [], isLoading } = useConnections();
   const queryClient = useQueryClient();
-  const [connectingBank, setConnectingBank] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [syncingId, setSyncingId] = useState<string | null>(null);
   const [disconnectId, setDisconnectId] = useState<string | null>(null);
-  const [scriptLoaded, setScriptLoaded] = useState(false);
-
-  // Load Pluggy Connect script
-  useEffect(() => {
-    if (document.getElementById("pluggy-connect-script")) {
-      setScriptLoaded(true);
-      return;
-    }
-    const script = document.createElement("script");
-    script.id = "pluggy-connect-script";
-    script.src = "https://cdn.pluggy.ai/pluggy-connect/v2/pluggy-connect.js";
-    script.async = true;
-    script.onload = () => setScriptLoaded(true);
-    document.head.appendChild(script);
-  }, []);
 
   const handleSync = useCallback(async (connectionId: string, itemId: string) => {
     if (!user) return;
     setSyncingId(connectionId);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/pluggy-sync`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.access_token}`,
-          },
-          body: JSON.stringify({ itemId, userId: user.id, connectionId }),
-        }
-      );
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || "Sync failed");
-
-      toast({
-        title: "Sincronização concluída",
-        description: `${result.syncedAccounts} conta(s) e ${result.syncedTransactions} transação(ões) sincronizadas.`,
+      const { data, error } = await supabase.functions.invoke("pluggy-sync", {
+        body: { itemId, userId: user.id, connectionId },
       });
+      if (error) throw error;
+
+      toast.success(
+        `Sincronização concluída: ${data?.syncedAccounts ?? 0} conta(s) e ${data?.syncedTransactions ?? 0} transação(ões).`
+      );
       queryClient.invalidateQueries({ queryKey: ["connections"] });
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
     } catch (err: any) {
-      toast({ title: "Erro na sincronização", description: err.message, variant: "destructive" });
+      toast.error("Erro na sincronização: " + (err.message || "Tente novamente"));
     } finally {
       setSyncingId(null);
     }
   }, [user, queryClient]);
 
   const handleConnectBank = useCallback(async () => {
-    if (!user || !scriptLoaded) return;
-    setConnectingBank(true);
+    if (!user) return;
+    setLoading(true);
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/pluggy-auth`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.access_token}`,
-          },
-        }
-      );
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || "Auth failed");
+      // 1. Get Pluggy token
+      const { data, error } = await supabase.functions.invoke("pluggy-auth");
+      if (error || !data) {
+        toast.error("Erro ao obter token da Pluggy");
+        setLoading(false);
+        return;
+      }
+      const connectToken = data?.accessToken || data?.connectToken || data?.apiKey;
+      if (!connectToken) {
+        toast.error("Token de conexão não recebido");
+        setLoading(false);
+        return;
+      }
 
-      const pluggyConnect = new window.PluggyConnect({
-        connectToken: result.accessToken,
-        onSuccess: async (data) => {
+      // 2. Load Pluggy script dynamically
+      await new Promise<void>((resolve, reject) => {
+        if ((window as any).PluggyConnect) { resolve(); return; }
+        const script = document.createElement("script");
+        script.src = "https://cdn.pluggy.ai/pluggy-connect/v2/pluggy-connect.js";
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error("Falha ao carregar Pluggy"));
+        document.head.appendChild(script);
+      });
+
+      // 3. Open widget
+      const pluggyConnect = new (window as any).PluggyConnect({
+        connectToken,
+        onSuccess: async ({ item }: any) => {
           try {
-            const itemId = data.item.id;
-            // Save connection
-            const { data: conn, error } = await supabase
+            const { data: conn, error: connErr } = await supabase
               .from("connections")
               .insert({
                 user_id: user.id,
@@ -134,36 +117,39 @@ export default function Connections() {
                 provider_type: "open_finance",
                 country: "BR",
                 status: "connected",
-                external_connection_id: itemId,
+                external_connection_id: item.id,
               })
               .select("id")
               .single();
 
-            if (error) throw error;
+            if (connErr) throw connErr;
 
-            toast({ title: "Banco conectado!", description: "Sincronizando transações..." });
+            toast.success("Banco conectado! Sincronizando transações...");
             queryClient.invalidateQueries({ queryKey: ["connections"] });
 
-            // Auto-sync
-            await handleSync(conn.id, itemId);
+            if (conn) {
+              await handleSync(conn.id, item.id);
+            }
           } catch (err: any) {
-            toast({ title: "Erro ao salvar conexão", description: err.message, variant: "destructive" });
+            toast.error("Erro ao salvar conexão: " + err.message);
           }
-          setConnectingBank(false);
+          setLoading(false);
         },
-        onError: (err) => {
-          toast({ title: "Erro ao conectar", description: err.message, variant: "destructive" });
-          setConnectingBank(false);
+        onError: (err: any) => {
+          toast.error("Erro ao conectar: " + err.message);
+          setLoading(false);
         },
-        onClose: () => setConnectingBank(false),
+        onClose: () => {
+          setLoading(false);
+        },
       });
 
       pluggyConnect.init();
     } catch (err: any) {
-      toast({ title: "Erro de autenticação", description: err.message, variant: "destructive" });
-      setConnectingBank(false);
+      toast.error("Erro: " + (err.message || "Tente novamente"));
+      setLoading(false);
     }
-  }, [user, scriptLoaded, queryClient, handleSync]);
+  }, [user, queryClient, handleSync]);
 
   const handleDisconnect = async () => {
     if (!disconnectId) return;
@@ -172,7 +158,7 @@ export default function Connections() {
       .update({ status: "disconnected" })
       .eq("id", disconnectId);
     queryClient.invalidateQueries({ queryKey: ["connections"] });
-    toast({ title: "Banco desconectado" });
+    toast.success("Banco desconectado");
     setDisconnectId(null);
   };
 
@@ -189,8 +175,8 @@ export default function Connections() {
             Conecte seus bancos e sincronize automaticamente
           </p>
         </div>
-        <Button onClick={handleConnectBank} disabled={connectingBank || !scriptLoaded}>
-          {connectingBank ? (
+        <Button onClick={handleConnectBank} disabled={loading}>
+          {loading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <Plus className="h-4 w-4" />
@@ -226,8 +212,8 @@ export default function Connections() {
             <p className="text-sm text-muted-foreground mb-6 max-w-sm">
               Conecte seu banco para importar transações automaticamente via Open Finance
             </p>
-            <Button onClick={handleConnectBank} disabled={connectingBank || !scriptLoaded}>
-              {connectingBank ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+            <Button onClick={handleConnectBank} disabled={loading}>
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
               Conectar primeiro banco
             </Button>
           </CardContent>
