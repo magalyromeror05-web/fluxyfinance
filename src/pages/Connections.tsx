@@ -175,8 +175,8 @@ export default function Connections() {
             Conecte seus bancos e sincronize automaticamente
           </p>
         </div>
-        <Button onClick={handleConnectBank} disabled={connectingBank || !scriptLoaded}>
-          {connectingBank ? (
+        <Button onClick={handleConnectBank} disabled={loading}>
+          {loading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <Plus className="h-4 w-4" />
