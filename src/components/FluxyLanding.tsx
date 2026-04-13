@@ -716,12 +716,22 @@ export default function FluxyLanding() {
                 )}
                 <h3 className="text-xl font-bold text-foreground mb-1">{name}</h3>
                 <p className="text-sm text-muted-foreground mb-4">{plan.desc[lang]}</p>
-                <div className="mb-5">
+                <div className="mb-2">
                   <span className="text-4xl font-extrabold text-foreground">
                     {price === "0" ? "R$ 0" : `R$ ${price}`}
                   </span>
                   <span className="text-sm text-muted-foreground ml-1">{price !== "0" ? suffix : ""}</span>
                 </div>
+                {price !== "0" && (
+                  <div className="text-xs text-muted-foreground/70 mb-5">
+                    {i === 1 
+                      ? "~$5.90/mo" 
+                      : i === 2 
+                        ? "~$4.10/mo" 
+                        : ""}
+                  </div>
+                )}
+                {price === "0" && <div className="mb-5" />}
                 <a
                   href="/auth"
                   className={`block text-center text-sm font-semibold rounded-xl py-3 mb-6 transition-all hover:-translate-y-0.5 ${
@@ -745,6 +755,11 @@ export default function FluxyLanding() {
               </div>
             );
           })}
+        </div>
+        <div className="max-w-5xl mx-auto text-center mt-8">
+          <p className="text-xs text-muted-foreground/60">
+            Prices shown in BRL · Regional pricing may apply
+          </p>
         </div>
       </section>
 
