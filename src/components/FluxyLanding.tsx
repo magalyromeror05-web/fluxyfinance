@@ -62,18 +62,18 @@ const t = {
     stats: [
       {
         icon: "💸",
-        value: { pt: "78% dos brasileiros", en: "78% of Brazilians", es: "78% de los brasileños" },
-        desc: { pt: "não conseguem poupar todo mês", en: "can't save every month", es: "no logran ahorrar cada mes" },
+        value: { pt: "Mais de 70% das pessoas", en: "More than 70% of people", es: "Más del 70% de las personas" },
+        desc: { pt: "não conseguem poupar consistentemente todo mês", en: "can't save consistently every month", es: "no logran ahorrar consistentemente cada mes" },
       },
       {
         icon: "😰",
-        value: { pt: "67% das famílias", en: "67% of families", es: "67% de las familias" },
+        value: { pt: "Metade dos lares", en: "Half of all households", es: "La mitad de los hogares" },
         desc: { pt: "terminam o mês sem saber onde foi o dinheiro", en: "end the month not knowing where the money went", es: "terminan el mes sin saber a dónde fue el dinero" },
       },
       {
         icon: "🌍",
-        value: { pt: "Quem vive em 2+ países", en: "Those in 2+ countries", es: "Quienes viven en 2+ países" },
-        desc: { pt: "perde o controle total das finanças", en: "lose total control of finances", es: "pierden el control total de las finanzas" },
+        value: { pt: "Pessoas que vivem entre países", en: "People living across borders", es: "Personas que viven entre fronteras" },
+        desc: { pt: "perdem o controle total das finanças", en: "lose total control of their finances", es: "pierden el control total de sus finanzas" },
       },
     ],
     transition: {
@@ -95,7 +95,7 @@ const t = {
     },
     bullets: [
       { pt: "Multimoeda real — BRL, USD, EUR, PYG e mais", en: "True multicurrency — BRL, USD, EUR, PYG and more", es: "Multimoneda real — BRL, USD, EUR, PYG y más" },
-      { pt: "Sincronização automática via Open Finance", en: "Automatic sync via Open Finance", es: "Sincronización automática vía Open Finance" },
+      { pt: "Sincronização automática com bancos", en: "Automatic bank sync", es: "Sincronización automática con bancos" },
       { pt: "Categorização inteligente por IA", en: "Intelligent AI categorization", es: "Categorización inteligente por IA" },
     ],
   },
@@ -141,7 +141,7 @@ const t = {
     subtitle: { pt: "Funcionalidades que crescem com você", en: "Features that grow with you", es: "Funcionalidades que crecen contigo" },
     items: [
       { icon: "📈", title: { pt: "Projeção financeira", en: "Financial projection", es: "Proyección financiera" }, desc: { pt: "Visualize cenários futuros com base nos seus hábitos atuais. Planeje com clareza.", en: "Visualize future scenarios based on your current habits. Plan with clarity.", es: "Visualiza escenarios futuros basados en tus hábitos actuales. Planifica con claridad." } },
-      { icon: "🔗", title: { pt: "Open Finance", en: "Open Finance", es: "Open Finance" }, desc: { pt: "Conecte seus bancos e tenha transações importadas automaticamente.", en: "Connect your banks and have transactions imported automatically.", es: "Conecta tus bancos y ten transacciones importadas automáticamente." } },
+      { icon: "🔗", title: { pt: "Bank sync", en: "Bank sync", es: "Bank sync" }, desc: { pt: "Conecte seus bancos e tenha transações importadas automaticamente.", en: "Connect your banks and import transactions automatically.", es: "Conecta tus bancos y ten transacciones importadas automáticamente." } },
       { icon: "📄", title: { pt: "Contratos e parcelas", en: "Contracts & installments", es: "Contratos y cuotas" }, desc: { pt: "Acompanhe financiamentos e parcelamentos com calendário de vencimentos.", en: "Track financing and installments with a due date calendar.", es: "Acompaña financiamientos y cuotas con calendario de vencimientos." } },
       { icon: "📤", title: { pt: "Exportação", en: "Export", es: "Exportación" }, desc: { pt: "Exporte seus dados em CSV ou PDF quando precisar.", en: "Export your data in CSV or PDF when you need it.", es: "Exporta tus datos en CSV o PDF cuando lo necesites." } },
       { icon: "🔔", title: { pt: "Alertas inteligentes", en: "Smart alerts", es: "Alertas inteligentes" }, desc: { pt: "Receba avisos antes de estourar orçamentos ou vencer parcelas.", en: "Get notified before busting budgets or missing installments.", es: "Recibe avisos antes de reventar presupuestos o vencer cuotas." } },
@@ -177,9 +177,9 @@ const t = {
         cta: { pt: "Assinar Pro", en: "Subscribe Pro", es: "Suscribirse Pro" },
         featured: true,
         features: {
-          pt: ["Moedas ilimitadas", "Contas ilimitadas", "Open Finance sync", "Categorização por IA", "Orçamentos avançados", "Projeção de 5 anos", "Dicas financeiras personalizadas", "Regras & automações", "Exportação CSV/PDF"],
-          en: ["Unlimited currencies", "Unlimited accounts", "Open Finance sync", "AI categorization", "Advanced budgets", "5-year projection", "Personalized financial tips", "Rules & automations", "CSV/PDF export"],
-          es: ["Monedas ilimitadas", "Cuentas ilimitadas", "Open Finance sync", "Categorización por IA", "Presupuestos avanzados", "Proyección de 5 años", "Consejos financieros personalizados", "Reglas y automatizaciones", "Exportación CSV/PDF"],
+          pt: ["Moedas ilimitadas", "Contas ilimitadas", "Bank sync", "Categorização por IA", "Orçamentos avançados", "Projeção de 5 anos", "Dicas financeiras personalizadas", "Regras & automações", "Exportação CSV/PDF"],
+          en: ["Unlimited currencies", "Unlimited accounts", "Bank sync", "AI categorization", "Advanced budgets", "5-year projection", "Personalized financial tips", "Rules & automations", "CSV/PDF export"],
+          es: ["Monedas ilimitadas", "Cuentas ilimitadas", "Bank sync", "Categorización por IA", "Presupuestos avanzados", "Proyección de 5 años", "Consejos financieros personalizados", "Reglas y automatizaciones", "Exportación CSV/PDF"],
         },
       },
       {
@@ -407,7 +407,7 @@ const FullDashboardMockup = () => (
         <div className="bg-card rounded-xl p-3 border border-border">
           <div className="text-[10px] font-bold text-foreground mb-2">💸 Últimas movimentações</div>
           {[
-            { m: "iFood", v: "-R$ 67,80", cls: "text-expense" },
+            { m: "Food Delivery", v: "-R$ 67,80", cls: "text-expense" },
             { m: "Freelance", v: "+R$ 2.500", cls: "text-income" },
             { m: "Spotify", v: "-R$ 34,90", cls: "text-expense" },
           ].map((tx) => (
@@ -426,9 +426,9 @@ const FullDashboardMockup = () => (
 const RulesVisual = () => (
   <div className="space-y-2 w-full max-w-[320px]">
     {[
-      { merchant: "Aluguel Apt", cat: "Moradia", badge: "Regra aplicada", badgeCls: "bg-primary/10 text-primary" },
+      { merchant: "Monthly Rent", cat: "Moradia", badge: "Regra aplicada", badgeCls: "bg-primary/10 text-primary" },
       { merchant: "Netflix", cat: "Lazer", badge: "IA", badgeCls: "bg-accent/10 text-accent" },
-      { merchant: "Padaria São José", cat: "Alimentação", badge: "Manual", badgeCls: "bg-secondary text-muted-foreground" },
+      { merchant: "Coffee Shop", cat: "Alimentação", badge: "Manual", badgeCls: "bg-secondary text-muted-foreground" },
     ].map((r) => (
       <div key={r.merchant} className="flex items-center justify-between bg-card rounded-xl p-3 border border-border shadow-card">
         <div>
@@ -716,12 +716,22 @@ export default function FluxyLanding() {
                 )}
                 <h3 className="text-xl font-bold text-foreground mb-1">{name}</h3>
                 <p className="text-sm text-muted-foreground mb-4">{plan.desc[lang]}</p>
-                <div className="mb-5">
+                <div className="mb-2">
                   <span className="text-4xl font-extrabold text-foreground">
                     {price === "0" ? "R$ 0" : `R$ ${price}`}
                   </span>
                   <span className="text-sm text-muted-foreground ml-1">{price !== "0" ? suffix : ""}</span>
                 </div>
+                {price !== "0" && (
+                  <div className="text-xs text-muted-foreground/70 mb-5">
+                    {i === 1 
+                      ? "~$5.90/mo" 
+                      : i === 2 
+                        ? "~$4.10/mo" 
+                        : ""}
+                  </div>
+                )}
+                {price === "0" && <div className="mb-5" />}
                 <a
                   href="/auth"
                   className={`block text-center text-sm font-semibold rounded-xl py-3 mb-6 transition-all hover:-translate-y-0.5 ${
@@ -745,6 +755,11 @@ export default function FluxyLanding() {
               </div>
             );
           })}
+        </div>
+        <div className="max-w-5xl mx-auto text-center mt-8">
+          <p className="text-xs text-muted-foreground/60">
+            Prices shown in BRL · Regional pricing may apply
+          </p>
         </div>
       </section>
 
