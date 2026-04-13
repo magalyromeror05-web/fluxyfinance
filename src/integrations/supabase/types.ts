@@ -182,6 +182,7 @@ export type Database = {
           created_at: string
           external_connection_id: string | null
           id: string
+          item_id: string | null
           last_sync_at: string | null
           logo: string | null
           provider: string
@@ -196,6 +197,7 @@ export type Database = {
           created_at?: string
           external_connection_id?: string | null
           id?: string
+          item_id?: string | null
           last_sync_at?: string | null
           logo?: string | null
           provider: string
@@ -210,6 +212,7 @@ export type Database = {
           created_at?: string
           external_connection_id?: string | null
           id?: string
+          item_id?: string | null
           last_sync_at?: string | null
           logo?: string | null
           provider?: string

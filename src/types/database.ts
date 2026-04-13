@@ -21,6 +21,7 @@ export interface DbConnection {
   created_at: string;
   last_sync_at: string | null;
   external_connection_id: string | null;
+  item_id: string | null;
 }
 
 export interface DbAccount {
