@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { CurrencyBadge } from "@/components/CurrencyBadge";
 import { CategorySourceBadge } from "@/components/CategorySourceBadge";
+import { ManualTransactionForm } from "@/components/ManualTransactionForm";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowUpRight, ArrowDownLeft, Filter, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -54,11 +55,12 @@ export default function Transactions() {
 
   return (
     <div className="p-4 md:p-8 max-w-5xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-8 gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Transações</h1>
           <p className="text-sm text-muted-foreground">Histórico completo de movimentações.</p>
         </div>
+        <ManualTransactionForm onCreated={fetchTransactions} />
       </div>
 
       {transactions.length === 0 ? (
