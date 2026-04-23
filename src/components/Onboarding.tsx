@@ -261,14 +261,14 @@ export default function Onboarding() {
                 {saving ? "Adicionando..." : "Adicionar conta"}
               </Button>
 
-              <button
-                onClick={() => {
-                  setStep(3);
-                }}
-                className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setStep(3)}
+                className="w-full text-sm text-muted-foreground hover:text-foreground"
               >
                 Pular por agora
-              </button>
+              </Button>
             </div>
           )}
 
