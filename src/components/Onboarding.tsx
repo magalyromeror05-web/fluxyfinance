@@ -99,7 +99,9 @@ export default function Onboarding() {
       .from("profiles")
       .update({ onboarding_completed: true } as any)
       .eq("id", user!.id);
-    queryClient.invalidateQueries({ queryKey: ["profile"] });
+    // Wait for the profile query to refetch so the guard sees the new value
+    await queryClient.invalidateQueries({ queryKey: ["profile"] });
+    await queryClient.refetchQueries({ queryKey: ["profile", user!.id] });
     setSaving(false);
     navigate("/dashboard", { replace: true });
   };
