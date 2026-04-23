@@ -635,6 +635,7 @@ export type Database = {
           monthly_income_brl: number | null
           onboarding_completed: boolean
           plan: string
+          tour_completed: boolean
         }
         Insert: {
           avatar_url?: string | null
@@ -645,6 +646,7 @@ export type Database = {
           monthly_income_brl?: number | null
           onboarding_completed?: boolean
           plan?: string
+          tour_completed?: boolean
         }
         Update: {
           avatar_url?: string | null
@@ -655,6 +657,7 @@ export type Database = {
           monthly_income_brl?: number | null
           onboarding_completed?: boolean
           plan?: string
+          tour_completed?: boolean
         }
         Relationships: []
       }
@@ -874,6 +877,7 @@ export type Database = {
           monthly_income_brl: number | null
           onboarding_completed: boolean
           plan: string
+          tour_completed: boolean
         }[]
         SetofOptions: {
           from: "*"

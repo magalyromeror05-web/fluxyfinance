@@ -14,6 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AiTipsCard } from "@/components/AiTipsCard";
 import { useExchangeRates } from "@/hooks/useExchangeRates";
+import { WelcomeTourMount } from "@/components/WelcomeTour";
 import type { FinancialSnapshot } from "@/lib/aiTips";
 
 function CurrencySection({
@@ -199,6 +200,7 @@ export default function Dashboard() {
 
   return (
     <div className="p-4 md:p-8 max-w-5xl mx-auto">
+      <WelcomeTourMount />
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">Visão Geral</h1>
         <p className="text-sm text-muted-foreground mt-1">
