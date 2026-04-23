@@ -46,6 +46,7 @@ export function AppLayout() {
           <Outlet />
         </main>
         <QuickAddButton />
+        <TourHelpButton />
       </div>
     );
   }
@@ -63,6 +64,7 @@ export function AppLayout() {
         </main>
       </div>
       <QuickAddButton />
+      <TourHelpButton />
     </div>
   );
 }
