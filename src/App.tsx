@@ -28,6 +28,7 @@ import Notifications from "@/pages/Notifications";
 import Goals from "@/pages/Goals";
 import Reports from "@/pages/Reports";
 import Converter from "@/pages/Converter";
+import Extratos from "@/pages/Extratos";
 import Auth from "@/pages/Auth";
 import ResetPassword from "@/pages/ResetPassword";
 import Plans from "@/pages/Plans";
@@ -77,6 +78,7 @@ const App = () => (
                 <Route path="/saude-financeira" element={<FinancialHealth />} />
                 <Route path="/dicas" element={<FinancialTips />} />
                 <Route path="/relatorios" element={<Reports />} />
+                <Route path="/extratos" element={<Extratos />} />
                 <Route path="/regras" element={<Rules />} />
                 <Route path="/contratos" element={<Contracts />} />
                 <Route path="/conexoes" element={<Connections />} />
