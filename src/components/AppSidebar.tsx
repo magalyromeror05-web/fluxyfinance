@@ -19,6 +19,7 @@ import {
   BookOpen,
   PieChart,
   Settings,
+  FileSpreadsheet,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdmin } from "@/hooks/useAdmin";
@@ -38,6 +39,7 @@ const mainItems = [
   { label: "Saúde", href: "/saude-financeira", icon: Heart },
   { label: "Dicas", href: "/dicas", icon: BookOpen },
   { label: "Relatórios", href: "/relatorios", icon: BarChart3 },
+  { label: "Extratos", href: "/extratos", icon: FileSpreadsheet },
   { label: "Conversor", href: "/conversor", icon: Repeat },
 ];
 
