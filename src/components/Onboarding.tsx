@@ -211,7 +211,7 @@ export default function Onboarding() {
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent position="popper" className="z-[9999]">
                         {accountTypes.map((t) => (
                           <SelectItem key={t.value} value={t.value}>
                             {t.label}
@@ -231,7 +231,7 @@ export default function Onboarding() {
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent position="popper" className="z-[9999]">
                         {currencies.map((c) => (
                           <SelectItem key={c.value} value={c.value}>
                             {c.flag} {c.value}
