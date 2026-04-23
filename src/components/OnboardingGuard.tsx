@@ -47,8 +47,8 @@ export function OnboardingGuard({ children }: OnboardingGuardProps) {
     return <>{children}</>;
   }
 
-  // Show onboarding only if explicitly false
-  if (profile.onboarding_completed === false) {
+  // Show onboarding unless explicitly completed (covers null/undefined)
+  if (profile.onboarding_completed !== true) {
     return <Onboarding />;
   }
 
