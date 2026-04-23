@@ -4,7 +4,6 @@ import "driver.js/dist/driver.css";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { HelpCircle } from "lucide-react";
 
 const STEPS = [
