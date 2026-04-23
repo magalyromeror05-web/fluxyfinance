@@ -3,6 +3,7 @@ import { QuickAddButton } from "@/components/QuickAddButton";
 import { NotificationCenter } from "@/components/NotificationCenter";
 import { CurrencyConverterPopover } from "@/components/CurrencyConverter";
 import { TourHelpButton } from "@/components/WelcomeTour";
+import { SupportChat } from "@/components/SupportChat";
 import { Outlet } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState, useEffect } from "react";
@@ -47,6 +48,7 @@ export function AppLayout() {
         </main>
         <QuickAddButton />
         <TourHelpButton />
+        <SupportChat />
       </div>
     );
   }
@@ -65,6 +67,7 @@ export function AppLayout() {
       </div>
       <QuickAddButton />
       <TourHelpButton />
+      <SupportChat />
     </div>
   );
 }
