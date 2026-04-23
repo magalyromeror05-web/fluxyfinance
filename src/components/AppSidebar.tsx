@@ -27,18 +27,18 @@ import fluxyLogo from "@/assets/fluxy-logo.png";
 import { Separator } from "@/components/ui/separator";
 
 const mainItems = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Contas", href: "/contas", icon: CreditCard },
+  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, tour: "dashboard" },
+  { label: "Contas", href: "/contas", icon: CreditCard, tour: "contas" },
   { label: "Investimentos", href: "/investimentos", icon: Landmark },
-  { label: "Metas", href: "/metas", icon: Target },
-  { label: "Movimentos", href: "/movimentos", icon: ArrowLeftRight },
+  { label: "Metas", href: "/metas", icon: Target, tour: "metas" },
+  { label: "Movimentos", href: "/movimentos", icon: ArrowLeftRight, tour: "movimentos" },
   { label: "Categorias", href: "/categorias", icon: Tags },
-  { label: "Orçamentos", href: "/orcamentos", icon: PieChart },
+  { label: "Orçamentos", href: "/orcamentos", icon: PieChart, tour: "orcamentos" },
   { label: "Simulador", href: "/simulador", icon: Calculator },
   { label: "Projeção", href: "/projecao", icon: TrendingUp },
-  { label: "Saúde", href: "/saude-financeira", icon: Heart },
+  { label: "Saúde", href: "/saude-financeira", icon: Heart, tour: "saude" },
   { label: "Dicas", href: "/dicas", icon: BookOpen },
-  { label: "Relatórios", href: "/relatorios", icon: BarChart3 },
+  { label: "Relatórios", href: "/relatorios", icon: BarChart3, tour: "relatorios" },
   { label: "Extratos", href: "/extratos", icon: FileSpreadsheet },
   { label: "Conversor", href: "/conversor", icon: Repeat },
 ];
@@ -79,7 +79,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
-        {mainItems.map(({ label, href, icon: Icon }) => (
+        {mainItems.map(({ label, href, icon: Icon, tour }) => (
           <NavLink
             key={href}
             to={href}
@@ -87,6 +87,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
             onClick={onNavigate}
             className={linkClass}
             activeClassName={activeClass}
+            data-tour={tour ? `nav-${tour}` : undefined}
           >
             <Icon className="h-4 w-4 flex-shrink-0" />
             <span>{label}</span>
