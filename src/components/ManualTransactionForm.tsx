@@ -206,7 +206,7 @@ export function ManualTransactionForm({ onCreated }: Props) {
                 <SelectTrigger id="currency">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent position="popper" className="z-[9999]">
                   <SelectItem value="BRL">🇧🇷 BRL</SelectItem>
                   <SelectItem value="USD">🇺🇸 USD</SelectItem>
                   <SelectItem value="PYG">🇵🇾 PYG</SelectItem>
@@ -237,7 +237,7 @@ export function ManualTransactionForm({ onCreated }: Props) {
                     <SelectTrigger className="w-16">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent position="popper" className="z-[9999]">
                       {ICON_OPTIONS.map((ic) => (
                         <SelectItem key={ic} value={ic}>{ic}</SelectItem>
                       ))}
@@ -253,7 +253,7 @@ export function ManualTransactionForm({ onCreated }: Props) {
                   <SelectTrigger>
                     <SelectValue placeholder="Categoria pai (opcional)" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent position="popper" className="z-[9999]">
                     <SelectItem value="none">Nenhuma (raiz)</SelectItem>
                     {parentCategories.map((c) => (
                       <SelectItem key={c.id} value={c.id}>
@@ -277,7 +277,12 @@ export function ManualTransactionForm({ onCreated }: Props) {
                 <SelectTrigger id="category">
                   <SelectValue placeholder="Selecione..." />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent position="popper" className="z-[9999]">
+                  {parentCategories.length === 0 && (
+                    <div className="px-3 py-2 text-xs text-muted-foreground">
+                      Nenhuma categoria. Clique em "Nova" para criar.
+                    </div>
+                  )}
                   {parentCategories.map((parent) => {
                     const children = getChildren(parent.id);
                     if (children.length === 0) {
