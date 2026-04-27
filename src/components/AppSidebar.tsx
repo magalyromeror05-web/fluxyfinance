@@ -23,35 +23,38 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdmin } from "@/hooks/useAdmin";
+import { useTranslation } from "react-i18next";
 import fluxyLogo from "@/assets/fluxy-logo.png";
 import { Separator } from "@/components/ui/separator";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 const mainItems = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, tour: "dashboard" },
-  { label: "Contas", href: "/contas", icon: CreditCard, tour: "contas" },
-  { label: "Investimentos", href: "/investimentos", icon: Landmark },
-  { label: "Metas", href: "/metas", icon: Target, tour: "metas" },
-  { label: "Movimentos", href: "/movimentos", icon: ArrowLeftRight, tour: "movimentos" },
-  { label: "Categorias", href: "/categorias", icon: Tags },
-  { label: "Orçamentos", href: "/orcamentos", icon: PieChart, tour: "orcamentos" },
-  { label: "Simulador", href: "/simulador", icon: Calculator },
-  { label: "Projeção", href: "/projecao", icon: TrendingUp },
-  { label: "Saúde", href: "/saude-financeira", icon: Heart, tour: "saude" },
-  { label: "Dicas", href: "/dicas", icon: BookOpen },
-  { label: "Relatórios", href: "/relatorios", icon: BarChart3, tour: "relatorios" },
-  { label: "Extratos", href: "/extratos", icon: FileSpreadsheet },
-  { label: "Conversor", href: "/conversor", icon: Repeat },
+  { labelKey: "sidebar.dashboard", href: "/dashboard", icon: LayoutDashboard, tour: "dashboard" },
+  { labelKey: "sidebar.accounts", href: "/contas", icon: CreditCard, tour: "contas" },
+  { labelKey: "sidebar.investments", href: "/investimentos", icon: Landmark },
+  { labelKey: "sidebar.goals", href: "/metas", icon: Target, tour: "metas" },
+  { labelKey: "sidebar.transactions", href: "/movimentos", icon: ArrowLeftRight, tour: "movimentos" },
+  { labelKey: "sidebar.categories", href: "/categorias", icon: Tags },
+  { labelKey: "sidebar.budgets", href: "/orcamentos", icon: PieChart, tour: "orcamentos" },
+  { labelKey: "sidebar.simulator", href: "/simulador", icon: Calculator },
+  { labelKey: "sidebar.projection", href: "/projecao", icon: TrendingUp },
+  { labelKey: "sidebar.health", href: "/saude-financeira", icon: Heart, tour: "saude" },
+  { labelKey: "sidebar.tips", href: "/dicas", icon: BookOpen },
+  { labelKey: "sidebar.reports", href: "/relatorios", icon: BarChart3, tour: "relatorios" },
+  { labelKey: "sidebar.statements", href: "/extratos", icon: FileSpreadsheet },
+  { labelKey: "sidebar.converter", href: "/conversor", icon: Repeat },
 ];
 
 const secondaryItems = [
-  { label: "Regras", href: "/regras", icon: Sliders },
-  { label: "Contratos", href: "/contratos", icon: FileText },
-  { label: "Conexões", href: "/conexoes", icon: Plug2 },
+  { labelKey: "sidebar.rules", href: "/regras", icon: Sliders },
+  { labelKey: "sidebar.contracts", href: "/contratos", icon: FileText },
+  { labelKey: "sidebar.connections", href: "/conexoes", icon: Plug2 },
 ];
 
 export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdmin();
+  const { t } = useTranslation();
 
   const fullName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuário";
   const email = user?.email || "";
@@ -73,13 +76,13 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
         <img src={fluxyLogo} alt="Fluxy" className="h-8 w-8 rounded-lg object-contain" />
         <div>
           <p className="text-sm font-bold text-white tracking-tight">Fluxy</p>
-          <p className="text-[10px] text-[hsl(var(--sidebar-foreground))] opacity-60">Multi-moeda</p>
+          <p className="text-[10px] text-[hsl(var(--sidebar-foreground))] opacity-60">{t("sidebar.tagline")}</p>
         </div>
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
-        {mainItems.map(({ label, href, icon: Icon, tour }) => (
+        {mainItems.map(({ labelKey, href, icon: Icon, tour }) => (
           <NavLink
             key={href}
             to={href}
@@ -90,13 +93,13 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
             data-tour={tour ? `nav-${tour}` : undefined}
           >
             <Icon className="h-4 w-4 flex-shrink-0" />
-            <span>{label}</span>
+            <span>{t(labelKey)}</span>
           </NavLink>
         ))}
 
         <Separator className="!my-3 bg-[hsl(var(--sidebar-border))]" />
 
-        {secondaryItems.map(({ label, href, icon: Icon }) => (
+        {secondaryItems.map(({ labelKey, href, icon: Icon }) => (
           <NavLink
             key={href}
             to={href}
@@ -106,7 +109,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
             activeClassName={activeClass}
           >
             <Icon className="h-4 w-4 flex-shrink-0" />
-            <span>{label}</span>
+            <span>{t(labelKey)}</span>
           </NavLink>
         ))}
       </nav>
@@ -121,7 +124,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
             className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-[hsl(var(--sidebar-foreground))] opacity-60 hover:opacity-100 hover:bg-[hsl(var(--sidebar-accent))] transition-colors"
           >
             <Settings className="h-3.5 w-3.5" />
-            <span>🔧 Painel Admin</span>
+            <span>{t("sidebar.admin")}</span>
           </NavLink>
         )}
 
@@ -133,11 +136,11 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
           style={{ background: "linear-gradient(135deg, hsl(var(--sidebar-primary)), hsl(var(--accent)))" }}
         >
           <Star className="h-4 w-4 fill-current" />
-          <span>Upgrade para Pro</span>
+          <span>{t("sidebar.upgrade")}</span>
         </NavLink>
 
         {/* User info */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <div className="h-7 w-7 rounded-full bg-[hsl(var(--sidebar-accent))] flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
             {initials}
           </div>
@@ -145,9 +148,10 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
             <p className="text-xs font-semibold text-white truncate">{fullName}</p>
             <p className="text-[10px] text-[hsl(var(--sidebar-foreground))] opacity-60 truncate">{email}</p>
           </div>
+          <LanguageSelector compact />
           <button
             onClick={signOut}
-            title="Sair"
+            title={t("common.logout")}
             className="flex-shrink-0 rounded-md p-1.5 text-[hsl(var(--sidebar-foreground))] opacity-60 hover:opacity-100 hover:bg-[hsl(var(--sidebar-accent))] transition-colors"
           >
             <LogOut className="h-3.5 w-3.5" />
