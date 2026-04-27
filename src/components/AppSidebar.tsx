@@ -28,27 +28,34 @@ import fluxyLogo from "@/assets/fluxy-logo.png";
 import { Separator } from "@/components/ui/separator";
 import { LanguageSelector } from "@/components/LanguageSelector";
 
-const mainItems = [
-  { labelKey: "sidebar.dashboard", href: "/dashboard", icon: LayoutDashboard, tour: "dashboard" },
-  { labelKey: "sidebar.accounts", href: "/contas", icon: CreditCard, tour: "contas" },
-  { labelKey: "sidebar.investments", href: "/investimentos", icon: Landmark },
-  { labelKey: "sidebar.goals", href: "/metas", icon: Target, tour: "metas" },
-  { labelKey: "sidebar.transactions", href: "/movimentos", icon: ArrowLeftRight, tour: "movimentos" },
-  { labelKey: "sidebar.categories", href: "/categorias", icon: Tags },
-  { labelKey: "sidebar.budgets", href: "/orcamentos", icon: PieChart, tour: "orcamentos" },
-  { labelKey: "sidebar.simulator", href: "/simulador", icon: Calculator },
-  { labelKey: "sidebar.projection", href: "/projecao", icon: TrendingUp },
-  { labelKey: "sidebar.health", href: "/saude-financeira", icon: Heart, tour: "saude" },
-  { labelKey: "sidebar.tips", href: "/dicas", icon: BookOpen },
-  { labelKey: "sidebar.reports", href: "/relatorios", icon: BarChart3, tour: "relatorios" },
-  { labelKey: "sidebar.statements", href: "/extratos", icon: FileSpreadsheet },
-  { labelKey: "sidebar.converter", href: "/conversor", icon: Repeat },
-];
-
-const secondaryItems = [
-  { labelKey: "sidebar.rules", href: "/regras", icon: Sliders },
-  { labelKey: "sidebar.contracts", href: "/contratos", icon: FileText },
-  { labelKey: "sidebar.connections", href: "/conexoes", icon: Plug2 },
+const navGroups = [
+  { label: "VISÃO GERAL", items: [
+    { labelKey: "sidebar.dashboard", href: "/dashboard", icon: LayoutDashboard, tour: "dashboard" },
+    { labelKey: "sidebar.accounts", href: "/contas", icon: CreditCard, tour: "contas" },
+    { labelKey: "sidebar.investments", href: "/investimentos", icon: Landmark },
+  ]},
+  { label: "MOVIMENTOS", items: [
+    { labelKey: "sidebar.transactions", href: "/movimentos", icon: ArrowLeftRight, tour: "movimentos" },
+    { labelKey: "sidebar.categories", href: "/categorias", icon: Tags },
+    { labelKey: "sidebar.rules", href: "/regras", icon: Sliders },
+  ]},
+  { label: "PLANEJAMENTO", items: [
+    { labelKey: "sidebar.budgets", href: "/orcamentos", icon: PieChart, tour: "orcamentos" },
+    { labelKey: "sidebar.goals", href: "/metas", icon: Target, tour: "metas" },
+    { labelKey: "sidebar.contracts", href: "/contratos", icon: FileText },
+  ]},
+  { label: "ANÁLISE", items: [
+    { labelKey: "sidebar.reports", href: "/relatorios", icon: BarChart3, tour: "relatorios" },
+    { labelKey: "sidebar.health", href: "/saude-financeira", icon: Heart, tour: "saude" },
+    { labelKey: "sidebar.projection", href: "/projecao", icon: TrendingUp },
+    { labelKey: "sidebar.simulator", href: "/simulador", icon: Calculator },
+  ]},
+  { label: "FERRAMENTAS", items: [
+    { labelKey: "sidebar.statements", href: "/extratos", icon: FileSpreadsheet },
+    { labelKey: "sidebar.converter", href: "/conversor", icon: Repeat },
+    { labelKey: "sidebar.connections", href: "/conexoes", icon: Plug2 },
+    { labelKey: "sidebar.tips", href: "/dicas", icon: BookOpen },
+  ]},
 ];
 
 export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
@@ -81,36 +88,18 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
-        {mainItems.map(({ labelKey, href, icon: Icon, tour }) => (
-          <NavLink
-            key={href}
-            to={href}
-            end={href === "/"}
-            onClick={onNavigate}
-            className={linkClass}
-            activeClassName={activeClass}
-            data-tour={tour ? `nav-${tour}` : undefined}
-          >
-            <Icon className="h-4 w-4 flex-shrink-0" />
-            <span>{t(labelKey)}</span>
-          </NavLink>
-        ))}
-
-        <Separator className="!my-3 bg-[hsl(var(--sidebar-border))]" />
-
-        {secondaryItems.map(({ labelKey, href, icon: Icon }) => (
-          <NavLink
-            key={href}
-            to={href}
-            end={href === "/"}
-            onClick={onNavigate}
-            className={linkClass}
-            activeClassName={activeClass}
-          >
-            <Icon className="h-4 w-4 flex-shrink-0" />
-            <span>{t(labelKey)}</span>
-          </NavLink>
+      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-4">
+        {navGroups.map((group, groupIndex) => (
+          <div key={group.label} className="space-y-1.5">
+            {groupIndex > 0 && <Separator className="!my-2 bg-[hsl(var(--sidebar-border))]" />}
+            <p className="px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[hsl(var(--sidebar-foreground))] opacity-45">{group.label}</p>
+            {group.items.map(({ labelKey, href, icon: Icon, tour }) => (
+              <NavLink key={href} to={href} end={href === "/"} onClick={onNavigate} className={linkClass} activeClassName={activeClass} data-tour={tour ? `nav-${tour}` : undefined}>
+                <Icon className="h-4 w-4 flex-shrink-0" />
+                <span>{t(labelKey)}</span>
+              </NavLink>
+            ))}
+          </div>
         ))}
       </nav>
 
