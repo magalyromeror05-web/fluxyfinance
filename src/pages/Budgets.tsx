@@ -803,7 +803,7 @@ export default function Budgets() {
       <Dialog open={dialogOpen} onOpenChange={open => { setDialogOpen(open); if (!open) resetForm(); }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{editingBudget ? "Editar Orçamento" : "{t("common.add")} {t("pages.budgets")}"}</DialogTitle>
+            <DialogTitle>{editingBudget ? "Editar Orçamento" : `${t("common.add")} ${t("pages.budgets")}`}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <div>
