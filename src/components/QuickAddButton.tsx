@@ -17,7 +17,7 @@ import {
   Drawer, DrawerContent,
 } from "@/components/ui/drawer";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Plus, ChevronDown } from "lucide-react";
+import { ArrowDownLeft, ArrowLeftRight, ArrowUpRight, CreditCard, Plus, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -66,6 +66,15 @@ export function QuickAddButton() {
 
   useEffect(() => { if (open) fetchData(); }, [open, fetchData]);
   useEffect(() => { if (open) setTimeout(() => amountRef.current?.focus(), 100); }, [open]);
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const detail = (event as CustomEvent<{ type?: TxType }>).detail;
+      if (detail?.type) setTxType(detail.type);
+      setOpen(true);
+    };
+    window.addEventListener("fluxy:quick-add", handler);
+    return () => window.removeEventListener("fluxy:quick-add", handler);
+  }, []);
 
   // Keyboard shortcut
   useEffect(() => {
@@ -125,6 +134,11 @@ export function QuickAddButton() {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && parseFloat(amount) > 0) { e.preventDefault(); handleSave(); }
+  };
+
+  const openWithType = (type: TxType) => {
+    setTxType(type);
+    setOpen(true);
   };
 
   const formContent = (
@@ -232,14 +246,23 @@ export function QuickAddButton() {
 
   return (
     <>
-      {/* FAB */}
-      <button
-        onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center"
-        title="Registro rápido (N)"
-      >
-        <Plus className="h-7 w-7" strokeWidth={2.5} />
-      </button>
+      <div className="group fixed bottom-6 right-6 z-50 hidden md:block">
+        <div className="pointer-events-none absolute bottom-16 right-0 flex flex-col gap-2 opacity-0 translate-y-2 transition-all group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0">
+          {[
+            { label: "Adicionar entrada", icon: ArrowDownLeft, action: () => openWithType("income") },
+            { label: "Adicionar saída", icon: ArrowUpRight, action: () => openWithType("expense") },
+            { label: "Adicionar conta", icon: CreditCard, action: () => { window.location.href = "/contas"; } },
+            { label: "Transferência entre contas", icon: ArrowLeftRight, action: () => openWithType("transfer") },
+          ].map(({ label, icon: Icon, action }) => (
+            <button key={label} onClick={action} className="flex items-center justify-end gap-2 whitespace-nowrap rounded-full bg-card px-3 py-2 text-xs font-semibold text-foreground shadow-elevated border border-border hover:-translate-y-0.5 transition-all">
+              <span>{label}</span><span className="grid h-8 w-8 place-items-center rounded-full bg-primary/10 text-primary"><Icon className="h-4 w-4" /></span>
+            </button>
+          ))}
+        </div>
+        <button onClick={() => setOpen(true)} className="h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center" title="Registro rápido (N)">
+          <Plus className="h-7 w-7" strokeWidth={2.5} />
+        </button>
+      </div>
 
       {/* Mobile: Drawer / Desktop: Dialog */}
       {isMobile ? (
