@@ -11,9 +11,10 @@ import { CurrencyBadge } from "@/components/CurrencyBadge";
 import { CategorySourceBadge } from "@/components/CategorySourceBadge";
 import { ManualTransactionForm } from "@/components/ManualTransactionForm";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowUpRight, ArrowDownLeft, Filter, Search } from "lucide-react";
+import { ArrowUpRight, ArrowDownLeft, PlusCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { EmptyState } from "@/components/EmptyState";
 
 export default function Transactions() {
   const { t } = useTranslation();
@@ -66,14 +67,12 @@ export default function Transactions() {
       </div>
 
       {transactions.length === 0 ? (
-        <div className="atlas-card p-10 text-center">
-          <p className="text-muted-foreground">Nenhuma transação encontrada.</p>
-        </div>
+        <EmptyState icon={PlusCircle} title="Nenhuma transação ainda" subtitle="Adicione sua primeira movimentação ou conecte um banco para acompanhar seu histórico." actionLabel="Adicionar movimentação" onAction={() => window.dispatchEvent(new CustomEvent("fluxy:quick-add", { detail: { type: "expense" } }))} />
       ) : (
         <div className="atlas-card overflow-hidden">
           <div className="divide-y divide-border">
-            {transactions.map((tx) => (
-              <div key={tx.id} className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors">
+            {transactions.map((tx, index) => (
+              <div key={tx.id} style={{ animationDelay: `${index * 50}ms` }} className="p-4 flex items-center justify-between hover:bg-muted/50 transition-all duration-200 hover:shadow-card animate-fade-in">
                 <div className="flex items-center gap-4">
                   <div className={cn(
                     "h-10 w-10 rounded-full flex items-center justify-center",

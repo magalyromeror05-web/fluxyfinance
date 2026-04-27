@@ -17,6 +17,7 @@ import { AiTipsCard } from "@/components/AiTipsCard";
 import { useExchangeRates } from "@/hooks/useExchangeRates";
 import { WelcomeTourMount } from "@/components/WelcomeTour";
 import type { FinancialSnapshot } from "@/lib/aiTips";
+import { CountUp } from "@/components/CountUp";
 
 function CurrencySection({
   currency,
@@ -53,10 +54,10 @@ function CurrencySection({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-        <div className="atlas-card p-5 col-span-1">
+        <div className="atlas-card p-5 col-span-1 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated">
           <p className="text-xs font-medium text-muted-foreground mb-1">{t("dashboard.totalBalance")}</p>
           <p className="text-2xl font-bold tabular-nums text-foreground leading-none">
-            {formatCurrency(balance, currency)}
+            <CountUp value={balance} formatter={(v) => formatCurrency(v, currency)} />
           </p>
           <p className="text-xs text-muted-foreground mt-2">{currencyAccounts.length} {t("common.account", { count: currencyAccounts.length })}</p>
           {currency !== "BRL" && (
@@ -64,25 +65,25 @@ function CurrencySection({
           )}
         </div>
 
-        <div className="atlas-card p-5">
+        <div className="atlas-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated">
           <div className="flex items-center justify-between mb-1">
             <p className="text-xs font-medium text-muted-foreground">{t("dashboard.incomeMonth")}</p>
             <TrendingUp className="h-3.5 w-3.5 text-income" />
           </div>
-          <p className="text-xl font-bold tabular-nums text-income">+{formatCurrency(income, currency)}</p>
+          <p className="text-xl font-bold tabular-nums text-income">+<CountUp value={income} formatter={(v) => formatCurrency(v, currency)} /></p>
         </div>
 
-        <div className="atlas-card p-5">
+        <div className="atlas-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated">
           <div className="flex items-center justify-between mb-1">
             <p className="text-xs font-medium text-muted-foreground">{t("dashboard.expensesMonth")}</p>
             <TrendingDown className="h-3.5 w-3.5 text-expense" />
           </div>
-          <p className="text-xl font-bold tabular-nums text-expense">-{formatCurrency(expenses, currency)}</p>
+          <p className="text-xl font-bold tabular-nums text-expense">-<CountUp value={expenses} formatter={(v) => formatCurrency(v, currency)} /></p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="atlas-card p-5">
+        <div className="atlas-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated">
           <div className="flex items-center gap-2 mb-3">
             <Bell className="h-3.5 w-3.5 text-muted-foreground" />
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("dashboard.events")}</p>
@@ -90,7 +91,7 @@ function CurrencySection({
           <p className="text-sm text-muted-foreground">{t("dashboard.noEvents")}</p>
         </div>
 
-        <div className="atlas-card p-5">
+        <div className="atlas-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated">
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
             {t("dashboard.latestTransactions")}
           </p>
