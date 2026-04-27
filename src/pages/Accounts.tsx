@@ -28,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { EmptyState } from "@/components/EmptyState";
 
 const ALL = "ALL" as const;
 type Filter = string | typeof ALL;
@@ -224,19 +225,13 @@ export default function Accounts() {
       </div>
 
       {accounts.length === 0 ? (
-        <div className="atlas-card p-10 text-center fade-in">
-          <div className="text-4xl mb-4">🏦</div>
-          <h2 className="text-lg font-semibold text-foreground mb-2">Nenhuma conta cadastrada</h2>
-          <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
-            Adicione suas contas bancárias ou carteiras digitais para começar.
-          </p>
-        </div>
+        <EmptyState icon={Building2} title="Nenhuma conta cadastrada" subtitle="Adicione suas contas bancárias ou carteiras digitais para começar." actionLabel="Adicionar conta" onAction={() => setDialogOpen(true)} />
       ) : (
         <>
           {/* Summary cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-4">
-            {userCurrencies.map((cur) => (
-              <div key={cur} className="atlas-card p-4">
+            {userCurrencies.map((cur, index) => (
+              <div key={cur} style={{ animationDelay: `${index * 50}ms` }} className="atlas-card p-4 animate-fade-in transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated">
                 <CurrencyBadge currency={cur as any} size="sm" />
                 <p className="text-xl font-bold tabular-nums mt-2 text-foreground">
                   {formatCurrency(totals[cur], cur)}
@@ -295,7 +290,7 @@ export default function Accounts() {
                 : null;
 
               return (
-                <div key={account.id} className="atlas-card p-4 flex items-center gap-4">
+                <div key={account.id} className="atlas-card p-4 flex items-center gap-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated animate-fade-in">
                   <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center flex-shrink-0">
                     <Building2 className="h-5 w-5 text-muted-foreground" />
                   </div>
