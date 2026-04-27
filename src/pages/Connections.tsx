@@ -25,6 +25,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
+import { useTranslation } from "react-i18next";
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -86,6 +87,7 @@ function timeAgo(dateStr: string | null): string {
 }
 
 export default function Connections() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { data: connections = [], isLoading } = useConnections();
   const queryClient = useQueryClient();
@@ -188,12 +190,12 @@ export default function Connections() {
     <div className="p-4 md:p-8 max-w-3xl mx-auto">
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Conexões</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("pages.connections")}</h1>
           <p className="text-sm text-muted-foreground mt-1">Conecte seus bancos e sincronize automaticamente</p>
         </div>
         <Button onClick={() => setModalOpen(true)}>
           <Plus className="h-4 w-4" />
-          Conectar banco
+          {t("common.add")} {t("pages.connections")}
         </Button>
       </div>
 

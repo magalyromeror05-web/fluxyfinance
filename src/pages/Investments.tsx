@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useTranslation } from "react-i18next";
 
 interface Investment {
   id: string;
@@ -55,6 +56,7 @@ const typeInfo = (t: string) => TYPE_OPTIONS.find(o => o.value === t) || { value
 const CURRENCIES = ["BRL", "USD", "EUR"] as const;
 
 export default function Investments() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [investments, setInvestments] = useState<Investment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -191,11 +193,11 @@ export default function Investments() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Investimentos</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("pages.investments")}</h1>
           <p className="text-sm text-muted-foreground mt-1">Seu patrimônio organizado em um só lugar</p>
         </div>
         <Button onClick={openCreate} size="sm" className="gap-2">
-          <Plus className="h-4 w-4" /> Registrar investimento
+          <Plus className="h-4 w-4" /> {t("common.add")} {t("pages.investments")}
         </Button>
       </div>
 

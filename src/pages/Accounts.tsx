@@ -21,6 +21,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+import { useTranslation } from "react-i18next";
   Select,
   SelectContent,
   SelectItem,
@@ -57,6 +58,7 @@ const accountTypes = [
 const currencyOptions = ["BRL", "USD", "PYG", "EUR", "GBP", "ARS", "CLP", "COP", "UYU"];
 
 export default function Accounts() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { data: accounts = [], isLoading } = useAccounts();
@@ -144,7 +146,7 @@ export default function Accounts() {
     <div className="p-4 md:p-8 max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Contas</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("pages.accounts")}</h1>
           <p className="text-sm text-muted-foreground mt-1">
             {accounts.length} contas em {new Set(accounts.map((a) => a.institution_name)).size} instituições.
           </p>
@@ -154,7 +156,7 @@ export default function Accounts() {
           <DialogTrigger asChild>
             <Button size="sm" className="gap-1.5">
               <Plus className="h-4 w-4" />
-              Adicionar conta
+              {t("dashboard.addAccount")}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">

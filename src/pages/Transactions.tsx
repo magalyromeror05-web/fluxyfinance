@@ -13,8 +13,10 @@ import { ManualTransactionForm } from "@/components/ManualTransactionForm";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowUpRight, ArrowDownLeft, Filter, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 export default function Transactions() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [transactions, setTransactions] = useState<DbTransaction[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,7 +59,7 @@ export default function Transactions() {
     <div className="p-4 md:p-8 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Transações</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("pages.transactions")}</h1>
           <p className="text-sm text-muted-foreground">Histórico completo de movimentações.</p>
         </div>
         <ManualTransactionForm onCreated={fetchTransactions} />

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { EmojiPicker } from "@/components/EmojiPicker";
+import { useTranslation } from "react-i18next";
 
 interface DbCategory {
   id: string;
@@ -31,6 +32,7 @@ const ALL = "ALL" as const;
 type Filter = Currency | typeof ALL;
 
 export default function Categories() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [categories, setCategories] = useState<DbCategory[]>([]);
   const [transactions, setTransactions] = useState<any[]>([]);
@@ -135,14 +137,14 @@ export default function Categories() {
     <div className="p-4 md:p-8 max-w-3xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Categorias</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("pages.categories")}</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Árvore de categorias com drill-down por moeda.
           </p>
         </div>
         <Button onClick={() => openCreate()} size="sm" className="gap-2">
           <Plus className="h-4 w-4" />
-          Nova Categoria
+          {t("common.add")} {t("pages.categories")}
         </Button>
       </div>
 
@@ -261,7 +263,7 @@ export default function Categories() {
       <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{editing ? "Editar Categoria" : "Nova Categoria"}</DialogTitle>
+            <DialogTitle>{editing ? "Editar Categoria" : "{t("common.add")} {t("pages.categories")}"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <div>
