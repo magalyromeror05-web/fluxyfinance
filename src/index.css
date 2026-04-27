@@ -127,6 +127,10 @@
     box-shadow: var(--shadow-card);
   }
 
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+
   /* Stat block */
   .stat-amount {
     @apply text-2xl font-700 tabular-nums tracking-tight text-foreground;
