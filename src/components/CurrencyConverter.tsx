@@ -268,7 +268,7 @@ function IofTableModal() {
         <DialogHeader><DialogTitle>Tabela de IOF</DialogTitle></DialogHeader>
         <div className="space-y-2 text-sm">
           {Object.entries(IOF_RATES).map(([key, rate]) => (
-            <div key={key} className="flex justify-between border-b border-border/60 py-2"><span className="capitalize">{key.replaceAll("_", " ")}</span><strong>{rate.toFixed(2)}%</strong></div>
+            <div key={key} className="flex justify-between border-b border-border/60 py-2"><span className="capitalize">{key.replace(/_/g, " ")}</span><strong>{rate.toFixed(2)}%</strong></div>
           ))}
         </div>
       </DialogContent>
