@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Onboarding from "@/components/Onboarding";
+import { useTranslation } from "react-i18next";
 
 interface OnboardingGuardProps {
   children: React.ReactNode;
@@ -10,13 +11,14 @@ interface OnboardingGuardProps {
 
 export function OnboardingGuard({ children }: OnboardingGuardProps) {
   const { user, loading: authLoading } = useAuth();
+  const { t } = useTranslation();
 
   const { data: profile, isLoading: profileLoading, isError } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("onboarding_completed")
+        .select("onboarding_completed, language")
         .eq("id", user!.id)
         .single();
       if (error) throw error;
@@ -32,7 +34,7 @@ export function OnboardingGuard({ children }: OnboardingGuardProps) {
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-          <p className="text-sm text-muted-foreground">Carregando...</p>
+          <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
         </div>
       </div>
     );

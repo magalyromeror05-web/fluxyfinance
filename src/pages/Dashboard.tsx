@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -28,6 +29,7 @@ function CurrencySection({
   transactions: DbTransaction[];
   convert: (amount: number, from: string, to: string) => number;
 }) {
+  const { t } = useTranslation();
   const currencyAccounts = accounts.filter((a) => a.currency === currency);
   const currencyTxs = transactions.filter((t) => t.currency === currency);
 
@@ -52,19 +54,19 @@ function CurrencySection({
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <div className="atlas-card p-5 col-span-1">
-          <p className="text-xs font-medium text-muted-foreground mb-1">Saldo total</p>
+          <p className="text-xs font-medium text-muted-foreground mb-1">{t("dashboard.totalBalance")}</p>
           <p className="text-2xl font-bold tabular-nums text-foreground leading-none">
             {formatCurrency(balance, currency)}
           </p>
-          <p className="text-xs text-muted-foreground mt-2">{currencyAccounts.length} conta(s)</p>
+          <p className="text-xs text-muted-foreground mt-2">{currencyAccounts.length} {t("common.account", { count: currencyAccounts.length })}</p>
           {currency !== "BRL" && (
-            <p className="text-[10px] text-muted-foreground/70 mt-1">≈ {formatCurrency(convert(balance, currency, "BRL"), "BRL")} na cotação atual</p>
+            <p className="text-[10px] text-muted-foreground/70 mt-1">≈ {formatCurrency(convert(balance, currency, "BRL"), "BRL")} {t("dashboard.currentRate")}</p>
           )}
         </div>
 
         <div className="atlas-card p-5">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-xs font-medium text-muted-foreground">Entradas (mês)</p>
+            <p className="text-xs font-medium text-muted-foreground">{t("dashboard.incomeMonth")}</p>
             <TrendingUp className="h-3.5 w-3.5 text-income" />
           </div>
           <p className="text-xl font-bold tabular-nums text-income">+{formatCurrency(income, currency)}</p>
@@ -72,7 +74,7 @@ function CurrencySection({
 
         <div className="atlas-card p-5">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-xs font-medium text-muted-foreground">Saídas (mês)</p>
+            <p className="text-xs font-medium text-muted-foreground">{t("dashboard.expensesMonth")}</p>
             <TrendingDown className="h-3.5 w-3.5 text-expense" />
           </div>
           <p className="text-xl font-bold tabular-nums text-expense">-{formatCurrency(expenses, currency)}</p>
@@ -83,17 +85,17 @@ function CurrencySection({
         <div className="atlas-card p-5">
           <div className="flex items-center gap-2 mb-3">
             <Bell className="h-3.5 w-3.5 text-muted-foreground" />
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Eventos</p>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("dashboard.events")}</p>
           </div>
-          <p className="text-sm text-muted-foreground">Sem eventos este mês.</p>
+          <p className="text-sm text-muted-foreground">{t("dashboard.noEvents")}</p>
         </div>
 
         <div className="atlas-card p-5">
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
-            Últimas movimentações
+            {t("dashboard.latestTransactions")}
           </p>
           {recentTxs.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Sem movimentações.</p>
+            <p className="text-sm text-muted-foreground">{t("dashboard.noTransactions")}</p>
           ) : (
             <ul className="space-y-2.5">
               {recentTxs.map((tx) => (
@@ -145,6 +147,7 @@ function DashboardSkeleton() {
 }
 
 function GoalsWidget({ userId }: { userId: string }) {
+  const { t } = useTranslation();
   const { data: goals = [] } = useQuery({
     queryKey: ["goals", userId],
     queryFn: async () => {
@@ -161,9 +164,9 @@ function GoalsWidget({ userId }: { userId: string }) {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Target className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm font-semibold text-muted-foreground uppercase tracking-widest">Minhas Metas</span>
+          <span className="text-sm font-semibold text-muted-foreground uppercase tracking-widest">{t("dashboard.goals")}</span>
         </div>
-        <Link to="/metas" className="text-xs text-primary hover:underline">Ver todas</Link>
+        <Link to="/metas" className="text-xs text-primary hover:underline">{t("dashboard.viewAll")}</Link>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {goals.map((g: any) => {
@@ -189,22 +192,23 @@ function GoalsWidget({ userId }: { userId: string }) {
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { t, i18n } = useTranslation();
   const { accounts, transactions, connections, loading } = useSupabaseData();
   const { convert } = useExchangeRates();
   const hasExpiring = connections.some((c) => c.status === "expiring");
   const currencies = [...new Set(accounts.map((a) => a.currency))];
   const lastSync = accounts.map((a) => a.last_sync_at).filter(Boolean).sort().reverse()[0];
   const syncLabel = lastSync
-    ? new Date(lastSync).toLocaleString("pt-BR", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short" })
+    ? new Date(lastSync).toLocaleString(i18n.language, { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short" })
     : null;
 
   return (
     <div className="p-4 md:p-8 max-w-5xl mx-auto">
       <WelcomeTourMount />
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Visão Geral</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t("dashboard.title")}</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Visão por moeda para evitar confusão. Cada uma no seu lugar.
+          {t("dashboard.subtitle")}
         </p>
       </div>
 
@@ -212,8 +216,8 @@ export default function Dashboard() {
         <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 fade-in">
           <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
           <div>
-            <p className="text-sm font-semibold text-amber-800">Conexão expirando em breve</p>
-            <p className="text-xs text-amber-700 mt-0.5">Reconecte para manter o sync.</p>
+            <p className="text-sm font-semibold text-amber-800">{t("dashboard.connectionExpiringTitle")}</p>
+            <p className="text-xs text-amber-700 mt-0.5">{t("dashboard.connectionExpiringText")}</p>
           </div>
         </div>
       )}
@@ -221,7 +225,7 @@ export default function Dashboard() {
       {syncLabel && (
         <div className="flex items-center gap-2 mb-6 text-xs text-muted-foreground">
           <RefreshCw className="h-3 w-3" />
-          <span>Última sincronização: {syncLabel} · Tudo certo — isso é só organização.</span>
+          <span>{t("dashboard.lastSync", { time: syncLabel })}</span>
         </div>
       )}
 
@@ -230,16 +234,16 @@ export default function Dashboard() {
       ) : currencies.length === 0 ? (
         <div className="atlas-card p-10 text-center fade-in">
           <div className="text-4xl mb-4">🏦</div>
-          <h2 className="text-lg font-semibold text-foreground mb-2">Adicione sua primeira conta para começar</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-2">{t("dashboard.emptyTitle")}</h2>
           <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
-            Cadastre suas contas bancárias ou carteiras digitais para ter uma visão completa das suas finanças.
+            {t("dashboard.emptyText")}
           </p>
           <Link
             to="/contas"
             className="inline-flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-5 py-2.5 text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             <Plus className="h-4 w-4" />
-            Adicionar conta
+            {t("dashboard.addAccount")}
           </Link>
         </div>
       ) : (

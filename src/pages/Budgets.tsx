@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { format, endOfMonth, addMonths, subMonths, parse } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useTranslation } from "react-i18next";
 
 interface DbCategory {
   id: string; name: string; icon: string; type: string; parent_id: string | null;
@@ -64,6 +65,7 @@ function getStatusBadge(pct: number) {
 }
 
 export default function Budgets() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const [categories, setCategories] = useState<DbCategory[]>([]);
@@ -419,11 +421,11 @@ export default function Budgets() {
     <div className="p-4 md:p-8 max-w-4xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Orçamentos</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("pages.budgets")}</h1>
           <p className="text-sm text-muted-foreground mt-1">Controle de gastos mensal por moeda e categoria.</p>
         </div>
         <Button onClick={openCreate} size="sm" className="gap-2">
-          <Plus className="h-4 w-4" /> Novo Orçamento
+          <Plus className="h-4 w-4" /> {t("common.add")} {t("pages.budgets")}
         </Button>
       </div>
 
@@ -454,7 +456,7 @@ export default function Budgets() {
                 <div className="flex items-center gap-2">
                   <Input type="number" placeholder="0.00" value={incomeInput} onChange={e => setIncomeInput(e.target.value)} className="w-36" step={100} />
                   <Button size="sm" variant="outline" onClick={saveIncome} disabled={savingIncome}>
-                    {savingIncome ? "..." : "Salvar"}
+                    {savingIncome ? "..." : t("common.save")}
                   </Button>
                 </div>
               </div>
@@ -801,7 +803,7 @@ export default function Budgets() {
       <Dialog open={dialogOpen} onOpenChange={open => { setDialogOpen(open); if (!open) resetForm(); }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{editingBudget ? "Editar Orçamento" : "Novo Orçamento"}</DialogTitle>
+            <DialogTitle>{editingBudget ? "Editar Orçamento" : `${t("common.add")} ${t("pages.budgets")}`}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <div>

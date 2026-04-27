@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import fluxyLogo from "@/assets/fluxy-logo.png";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import {
   Select,
   SelectContent,
@@ -17,11 +19,11 @@ import {
 } from "@/components/ui/select";
 
 const accountTypes = [
-  { value: "checking", label: "Conta Corrente" },
-  { value: "savings", label: "Poupança" },
-  { value: "wallet", label: "Carteira Digital" },
-  { value: "investment", label: "Investimento" },
-  { value: "credit", label: "Crédito" },
+  { value: "checking", labelKey: "onboarding.accountTypes.checking" },
+  { value: "savings", labelKey: "onboarding.accountTypes.savings" },
+  { value: "wallet", labelKey: "onboarding.accountTypes.wallet" },
+  { value: "investment", labelKey: "onboarding.accountTypes.investment" },
+  { value: "credit", labelKey: "onboarding.accountTypes.credit" },
 ];
 
 const currencies = [
@@ -35,6 +37,7 @@ const currencies = [
 
 export default function Onboarding() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
@@ -57,7 +60,7 @@ export default function Onboarding() {
 
   const handleStep1 = async () => {
     if (!displayName.trim()) {
-      toast.error("Informe seu nome.");
+      toast.error(t("onboarding.nameRequired"));
       return;
     }
     setSaving(true);
@@ -71,7 +74,7 @@ export default function Onboarding() {
 
   const handleAddAccount = async () => {
     if (!form.institution_name.trim() || !form.account_name.trim()) {
-      toast.error("Preencha todos os campos obrigatórios.");
+      toast.error(t("onboarding.requiredFields"));
       return;
     }
     setSaving(true);
@@ -85,7 +88,7 @@ export default function Onboarding() {
     });
     setSaving(false);
     if (error) {
-      toast.error("Erro ao criar conta: " + error.message);
+      toast.error(t("onboarding.createAccountError", { message: error.message }));
       return;
     }
     setAccountAdded(true);
@@ -108,7 +111,10 @@ export default function Onboarding() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="bg-card rounded-2xl shadow-elevated w-full max-w-md overflow-hidden fade-in">
+      <div className="bg-card rounded-2xl shadow-elevated w-full max-w-md overflow-hidden fade-in relative">
+        <div className="absolute right-4 top-4 z-10">
+          <LanguageSelector />
+        </div>
         {/* Progress */}
         <div className="flex items-center justify-center gap-2 pt-6 pb-2">
           {[1, 2, 3].map((s) => (
@@ -136,16 +142,16 @@ export default function Onboarding() {
               />
               <div>
                 <h2 className="text-xl font-bold text-foreground">
-                  Bem-vindo ao Fluxy 👋
+                  {t("onboarding.step1Title")}
                 </h2>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Finanças inteligentes, para quem vive no mundo real.
+                  {t("onboarding.step1Subtitle")}
                 </p>
               </div>
               <div className="text-left">
-                <Label>Como podemos te chamar?</Label>
+                <Label>{t("onboarding.nameLabel")}</Label>
                 <Input
-                  placeholder="Seu nome"
+                  placeholder={t("onboarding.namePlaceholder")}
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   className="mt-1"
@@ -158,7 +164,7 @@ export default function Onboarding() {
                 disabled={saving}
                 className="w-full"
               >
-                {saving ? "Salvando..." : "Continuar"}
+                {saving ? t("common.saving") : t("common.continue")}
               </Button>
             </div>
           )}
@@ -168,18 +174,18 @@ export default function Onboarding() {
             <div className="space-y-5 fade-in">
               <div className="text-center">
                 <h2 className="text-xl font-bold text-foreground">
-                  Vamos adicionar sua primeira conta
+                  {t("onboarding.step2Title")}
                 </h2>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Cadastre uma conta bancária ou carteira digital.
+                  {t("onboarding.step2Subtitle")}
                 </p>
               </div>
 
               <div className="space-y-3">
                 <div>
-                  <Label>Nome da instituição</Label>
+                  <Label>{t("onboarding.institutionLabel")}</Label>
                   <Input
-                    placeholder="Ex: Nubank, Itaú, Wise"
+                    placeholder={t("onboarding.institutionPlaceholder")}
                     value={form.institution_name}
                     onChange={(e) =>
                       setForm((f) => ({
@@ -190,9 +196,9 @@ export default function Onboarding() {
                   />
                 </div>
                 <div>
-                  <Label>Nome da conta</Label>
+                  <Label>{t("onboarding.accountNameLabel")}</Label>
                   <Input
-                    placeholder="Ex: Conta Corrente, Poupança"
+                    placeholder={t("onboarding.accountNamePlaceholder")}
                     value={form.account_name}
                     onChange={(e) =>
                       setForm((f) => ({ ...f, account_name: e.target.value }))
@@ -201,7 +207,7 @@ export default function Onboarding() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <Label>Tipo</Label>
+                    <Label>{t("onboarding.typeLabel")}</Label>
                     <Select
                       value={form.type}
                       onValueChange={(v) =>
@@ -212,16 +218,16 @@ export default function Onboarding() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent position="popper" className="z-[9999]">
-                        {accountTypes.map((t) => (
-                          <SelectItem key={t.value} value={t.value}>
-                            {t.label}
+                        {accountTypes.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {t(type.labelKey)}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                   <div>
-                    <Label>Moeda</Label>
+                    <Label>{t("onboarding.currencyLabel")}</Label>
                     <Select
                       value={form.currency}
                       onValueChange={(v) =>
@@ -242,7 +248,7 @@ export default function Onboarding() {
                   </div>
                 </div>
                 <div>
-                  <Label>Saldo atual</Label>
+                  <Label>{t("onboarding.balanceLabel")}</Label>
                   <Input
                     type="number"
                     step="0.01"
@@ -260,7 +266,7 @@ export default function Onboarding() {
                 disabled={saving}
                 className="w-full"
               >
-                {saving ? "Adicionando..." : "Adicionar conta"}
+                {saving ? t("onboarding.adding") : t("onboarding.addAccount")}
               </Button>
 
               <Button
@@ -269,7 +275,7 @@ export default function Onboarding() {
                 onClick={() => setStep(3)}
                 className="w-full text-sm text-muted-foreground hover:text-foreground"
               >
-                Pular por agora
+                {t("onboarding.skip")}
               </Button>
             </div>
           )}
@@ -294,12 +300,12 @@ export default function Onboarding() {
 
               <div>
                 <h2 className="text-xl font-bold text-foreground">
-                  Tudo pronto!
+                  {t("onboarding.doneTitle")}
                 </h2>
                 <p className="text-sm text-muted-foreground mt-2 max-w-xs mx-auto">
                   {accountAdded
-                    ? "Sua primeira conta foi adicionada. Agora você tem uma visão clara das suas finanças."
-                    : "Você pode adicionar contas a qualquer momento na seção Contas."}
+                    ? t("onboarding.doneWithAccount")
+                    : t("onboarding.doneWithoutAccount")}
                 </p>
               </div>
 
@@ -308,7 +314,7 @@ export default function Onboarding() {
                 disabled={saving}
                 className="w-full"
               >
-                {saving ? "Finalizando..." : "Ir para o dashboard"}
+                {saving ? t("onboarding.finishing") : t("onboarding.finish")}
               </Button>
             </div>
           )}
