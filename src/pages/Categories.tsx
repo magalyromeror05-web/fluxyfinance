@@ -263,7 +263,7 @@ export default function Categories() {
       <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{editing ? "Editar Categoria" : "{t("common.add")} {t("pages.categories")}"}</DialogTitle>
+            <DialogTitle>{editing ? "Editar Categoria" : `${t("common.add")} ${t("pages.categories")}`}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <div>
