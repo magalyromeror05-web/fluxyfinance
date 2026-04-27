@@ -218,9 +218,9 @@ export default function Onboarding() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent position="popper" className="z-[9999]">
-                        {accountTypes.map((t) => (
-                          <SelectItem key={t.value} value={t.value}>
-                            {t(t.labelKey)}
+                        {accountTypes.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {t(type.labelKey)}
                           </SelectItem>
                         ))}
                       </SelectContent>
