@@ -718,6 +718,7 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          language: string
           last_active_at: string | null
           monthly_income_brl: number | null
           onboarding_completed: boolean
@@ -729,6 +730,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id: string
+          language?: string
           last_active_at?: string | null
           monthly_income_brl?: number | null
           onboarding_completed?: boolean
@@ -740,6 +742,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id?: string
+          language?: string
           last_active_at?: string | null
           monthly_income_brl?: number | null
           onboarding_completed?: boolean
@@ -1020,6 +1023,7 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          language: string
           last_active_at: string | null
           monthly_income_brl: number | null
           onboarding_completed: boolean
