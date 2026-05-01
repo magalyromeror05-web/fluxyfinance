@@ -98,16 +98,25 @@ export default function Onboarding() {
 
   const handleFinish = async () => {
     setSaving(true);
-    await supabase
+    const { error } = await supabase
       .from("profiles")
       .update({ onboarding_completed: true } as any)
       .eq("id", user!.id);
-    // Wait for the profile query to refetch so the guard sees the new value
+
+    if (error) {
+      toast.error(t("onboarding.finishError") || "Erro ao finalizar. Tente novamente.");
+      setSaving(false);
+      return;
+    }
+
     await queryClient.invalidateQueries({ queryKey: ["profile"] });
-    await queryClient.refetchQueries({ queryKey: ["profile", user!.id] });
+    await queryClient.refetchQueries({ queryKey: ["profile"] });
     setSaving(false);
     navigate("/dashboard", { replace: true });
   };
+
+  // SQL fix for users affected by the previous bug (run manually in SQL Editor):
+  // UPDATE profiles SET onboarding_completed = true WHERE onboarding_completed IS NULL;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
