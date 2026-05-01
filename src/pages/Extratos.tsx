@@ -1,4 +1,7 @@
 import { useState, useMemo, useRef } from "react";
+import * as pdfjsLib from "pdfjs-dist";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -243,6 +246,58 @@ function parseCSVTransactions(text: string, bankId: string): Tx[] {
   return txs;
 }
 
+async function parsePDFTransactions(file: File, bankId: string): Promise<Tx[]> {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+  let fullText = "";
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const pageText = content.items.map((item: any) => item.str).join(" ");
+    fullText += pageText + "\n";
+  }
+  return parseItauText(fullText, bankId);
+}
+
+function parseItauText(text: string, bankId: string): Tx[] {
+  const txs: Tx[] = [];
+  const lineRegex = /(\d{2}\/\d{2}\/\d{4})\s+(.+?)\s+([-]?\d{1,3}(?:\.\d{3})*,\d{2})\s*$/gm;
+  const skipKeywords = [
+    "SALDO DO DIA",
+    "Aviso!",
+    "Os saldos acima",
+    "conforme contratado",
+    "Consultas, informações",
+  ];
+
+  let match;
+  let idx = 0;
+  while ((match = lineRegex.exec(text)) !== null) {
+    const [, dateRaw, descRaw, amountRaw] = match;
+    if (skipKeywords.some((k) => descRaw.toUpperCase().includes(k.toUpperCase()))) continue;
+    if (descRaw.toUpperCase().includes("SALDO")) continue;
+
+    const [d, m, y] = dateRaw.split("/");
+    const date = `${y}-${m}-${d}`;
+    const amountStr = amountRaw.replace(/\./g, "").replace(",", ".");
+    const amount = parseFloat(amountStr);
+    const merchant = descRaw.trim();
+    const { cat, auto } = autoCategorize(merchant);
+
+    txs.push({
+      id: `${bankId}-pdf-${idx++}-${Date.now()}`,
+      bankId,
+      date,
+      merchant,
+      amount,
+      category: cat,
+      autoCategorized: auto,
+    });
+  }
+  return txs;
+}
+
 function parseOFXTransactions(text: string, bankId: string): Tx[] {
   const txs: Tx[] = [];
   const blocks = text.match(/<STMTTRN>[\s\S]*?<\/STMTTRN>/gi) || [];
@@ -315,18 +370,36 @@ export default function Extratos() {
     const list = Array.from(files);
     let total = 0;
     for (const f of list) {
-      const text = await f.text();
       const lower = f.name.toLowerCase();
       let parsed: Tx[] = [];
-      if (lower.endsWith(".ofx") || text.includes("<OFX") || text.includes("<STMTTRN")) {
-        parsed = parseOFXTransactions(text, bankId);
+
+      if (lower.endsWith(".pdf") || f.type === "application/pdf") {
+        try {
+          parsed = await parsePDFTransactions(f, bankId);
+          if (parsed.length === 0) {
+            toast.warning(
+              `Não foi possível extrair transações do PDF "${f.name}". Tente exportar como CSV.`
+            );
+          }
+        } catch (err) {
+          toast.error(
+            `Erro ao ler PDF "${f.name}": verifique se não está protegido por senha.`
+          );
+          continue;
+        }
       } else {
-        parsed = parseCSVTransactions(text, bankId);
+        const text = await f.text();
+        if (lower.endsWith(".ofx") || text.includes("<OFX") || text.includes("<STMTTRN")) {
+          parsed = parseOFXTransactions(text, bankId);
+        } else {
+          parsed = parseCSVTransactions(text, bankId);
+        }
       }
+
       total += parsed.length;
       setTransactions((prev) => [...prev, ...parsed]);
     }
-    toast.success(`${total} transações importadas`);
+    if (total > 0) toast.success(`${total} transações importadas`);
   }
 
   function handleDrop(e: React.DragEvent) {
@@ -413,9 +486,9 @@ export default function Extratos() {
     <div className="space-y-6 pb-12">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Análise de extratos</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Diagnóstico Financeiro</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Faça upload dos seus extratos (CSV ou OFX) e gere um diagnóstico automático do seu fluxo financeiro.
+          Importe seus extratos e descubra para onde vai seu dinheiro.
         </p>
       </div>
 
@@ -565,7 +638,7 @@ export default function Extratos() {
           >
             <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-3" />
             <p className="text-sm font-medium">
-              Arraste arquivos CSV ou OFX aqui
+              Arraste arquivos CSV, OFX ou PDF aqui
             </p>
             <p className="text-xs text-muted-foreground mt-1">
               ou clique para selecionar
@@ -573,7 +646,7 @@ export default function Extratos() {
             <input
               ref={fileInputRef}
               type="file"
-              accept=".csv,.ofx,text/csv"
+              accept=".csv,.ofx,.pdf,text/csv,application/pdf"
               multiple
               className="hidden"
               onChange={(e) => {
@@ -583,6 +656,10 @@ export default function Extratos() {
                 }
               }}
             />
+          </div>
+          <div className="mt-3 rounded-lg border border-border bg-muted/30 p-3 text-xs text-muted-foreground">
+            📄 <span className="font-medium text-foreground">PDFs suportados:</span> Itaú, Bradesco, Santander, Nubank (exportação web).
+            PDFs protegidos por senha ou escaneados não são suportados — neste caso, exporte como CSV pelo app do banco.
           </div>
         </CardContent>
       </Card>
