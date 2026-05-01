@@ -17,9 +17,15 @@ type LanguageSelectorProps = {
   compact?: boolean;
   className?: string;
   align?: "start" | "center" | "end";
+  variant?: "dropdown" | "inline";
 };
 
-export function LanguageSelector({ compact = false, className, align = "end" }: LanguageSelectorProps) {
+export function LanguageSelector({
+  compact = false,
+  className,
+  align = "end",
+  variant = "dropdown",
+}: LanguageSelectorProps) {
   const { user } = useAuth();
   const { i18n, t } = useTranslation();
   const queryClient = useQueryClient();
@@ -48,6 +54,7 @@ export function LanguageSelector({ compact = false, className, align = "end" }: 
 
   const changeLanguage = async (language: SupportedLanguage) => {
     await i18n.changeLanguage(language);
+    localStorage.setItem("fluxy-language", language);
     localStorage.setItem("i18nextLng", language);
 
     if (user?.id) {
@@ -59,6 +66,38 @@ export function LanguageSelector({ compact = false, className, align = "end" }: 
       queryClient.invalidateQueries({ queryKey: ["profile", user.id] });
     }
   };
+
+  if (variant === "inline") {
+    return (
+      <div
+        className={cn(
+          "flex h-8 items-center gap-1 rounded-lg bg-[hsl(var(--sidebar-accent))]/30 p-1",
+          className,
+        )}
+      >
+        {languageOptions.map((option) => {
+          const active = option.code === currentLanguage;
+          return (
+            <button
+              key={option.code}
+              type="button"
+              onClick={() => changeLanguage(option.code)}
+              title={option.label}
+              className={cn(
+                "flex flex-1 items-center justify-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-semibold transition-colors",
+                active
+                  ? "bg-[hsl(var(--sidebar-accent))] text-white shadow-sm"
+                  : "text-[hsl(var(--sidebar-foreground))] opacity-60 hover:opacity-100 hover:bg-[hsl(var(--sidebar-accent))]/50",
+              )}
+            >
+              <span className="text-xs leading-none">{option.flag}</span>
+              <span>{option.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
 
   const selected = languageOptions.find((option) => option.code === currentLanguage) ?? languageOptions[0];
 
@@ -94,3 +133,4 @@ export function LanguageSelector({ compact = false, className, align = "end" }: 
     </DropdownMenu>
   );
 }
+
