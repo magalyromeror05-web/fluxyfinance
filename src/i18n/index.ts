@@ -24,13 +24,8 @@ const normalizeLanguage = (language?: string | null): SupportedLanguage => {
 
 export const getSupportedLanguage = normalizeLanguage;
 
-const stored =
-  (typeof localStorage !== "undefined" &&
-    (localStorage.getItem("fluxy-language") || localStorage.getItem("i18nextLng"))) ||
-  null;
-
 const initialLng = normalizeLanguage(
-  stored || (typeof navigator !== "undefined" ? navigator.language : "pt-BR"),
+  typeof localStorage !== "undefined" ? localStorage.getItem("fluxy-language") : "pt-BR",
 );
 
 i18n.use(initReactI18next).init({
@@ -43,9 +38,6 @@ i18n.use(initReactI18next).init({
   fallbackLng: "pt-BR",
   defaultNS: "translation",
   ns: ["translation"],
-  supportedLngs: [...supportedLanguages],
-  nonExplicitSupportedLngs: true,
-  load: "languageOnly",
   interpolation: { escapeValue: false },
   react: { useSuspense: false },
 });
