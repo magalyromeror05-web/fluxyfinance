@@ -1,7 +1,8 @@
 import { useState, useMemo, useRef } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+// Carregar worker via unpkg usando a mesma versão da lib instalada — evita mismatch
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -247,17 +248,46 @@ function parseCSVTransactions(text: string, bankId: string): Tx[] {
 }
 
 async function parsePDFTransactions(file: File, bankId: string): Promise<Tx[]> {
-  const arrayBuffer = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-
   let fullText = "";
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const content = await page.getTextContent();
-    const pageText = content.items.map((item: any) => item.str).join(" ");
-    fullText += pageText + "\n";
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const loadingTask = pdfjsLib.getDocument({
+      data: arrayBuffer,
+      disableRange: true,
+      disableStream: true,
+      disableAutoFetch: true,
+    });
+    const pdf = await loadingTask.promise;
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+
+      // Reconstruir linhas preservando posição Y para manter a ordem correta
+      const items = (content.items as any[]).slice().sort((a, b) => {
+        const yDiff = b.transform[5] - a.transform[5];
+        if (Math.abs(yDiff) > 3) return yDiff;
+        return a.transform[4] - b.transform[4];
+      });
+
+      let lastY = -1;
+      for (const item of items) {
+        const y = Math.round(item.transform[5]);
+        if (lastY !== -1 && Math.abs(y - lastY) > 3) {
+          fullText += "\n";
+        }
+        fullText += item.str + " ";
+        lastY = y;
+      }
+      fullText += "\n";
+    }
+
+    return parseItauText(fullText, bankId);
+  } catch (err) {
+    console.error("PDF parse error:", err);
+    console.log("Texto extraído até o erro:", fullText?.slice(0, 500));
+    throw err;
   }
-  return parseItauText(fullText, bankId);
 }
 
 function parseItauText(text: string, bankId: string): Tx[] {
