@@ -79,12 +79,15 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
   return (
     <aside className="flex h-screen w-60 flex-shrink-0 flex-col bg-[hsl(var(--sidebar-background))]">
       {/* Brand */}
-      <div className="flex items-center gap-3 px-6 py-6 border-b border-[hsl(var(--sidebar-border))]">
-        <img src={fluxyLogo} alt="Fluxy" className="h-8 w-8 rounded-lg object-contain" />
-        <div>
-          <p className="text-sm font-bold text-white tracking-tight">Fluxy</p>
-          <p className="text-[10px] text-[hsl(var(--sidebar-foreground))] opacity-60">{t("sidebar.tagline")}</p>
+      <div className="px-6 py-5 border-b border-[hsl(var(--sidebar-border))] space-y-3">
+        <div className="flex items-center gap-3">
+          <img src={fluxyLogo} alt="Fluxy" className="h-8 w-8 rounded-lg object-contain" />
+          <div>
+            <p className="text-sm font-bold text-white tracking-tight">Fluxy</p>
+            <p className="text-[10px] text-[hsl(var(--sidebar-foreground))] opacity-60">{t("sidebar.tagline")}</p>
+          </div>
         </div>
+        <LanguageSelector variant="inline" />
       </div>
 
       {/* Navigation */}
@@ -137,7 +140,6 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
             <p className="text-xs font-semibold text-white truncate">{fullName}</p>
             <p className="text-[10px] text-[hsl(var(--sidebar-foreground))] opacity-60 truncate">{email}</p>
           </div>
-          <LanguageSelector compact />
           <button
             onClick={signOut}
             title={t("common.logout")}
