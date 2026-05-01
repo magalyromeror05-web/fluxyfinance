@@ -20,6 +20,7 @@ import {
   PieChart,
   Settings,
   FileSpreadsheet,
+  Activity,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdmin } from "@/hooks/useAdmin";
@@ -51,7 +52,7 @@ const navGroups = [
     { labelKey: "sidebar.simulator", href: "/simulador", icon: Calculator },
   ]},
   { label: "FERRAMENTAS", items: [
-    { labelKey: "sidebar.statements", href: "/extratos", icon: FileSpreadsheet },
+    { labelKey: "sidebar.statements", href: "/extratos", icon: Activity },
     { labelKey: "sidebar.converter", href: "/conversor", icon: Repeat },
     { labelKey: "sidebar.connections", href: "/conexoes", icon: Plug2 },
     { labelKey: "sidebar.tips", href: "/dicas", icon: BookOpen },
