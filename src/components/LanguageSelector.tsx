@@ -5,7 +5,7 @@ import { Check, Languages } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
-import { getSupportedLanguage, languageOptions, type SupportedLanguage } from "@/i18n";
+import i18nInstance, { getSupportedLanguage, languageOptions, type SupportedLanguage } from "@/i18n";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -53,7 +53,7 @@ export function LanguageSelector({
   }, [currentLanguage, i18n, profileLanguage]);
 
   const changeLanguage = async (language: SupportedLanguage) => {
-    await i18n.changeLanguage(language);
+    await i18nInstance.changeLanguage(language);
     localStorage.setItem("fluxy-language", language);
     localStorage.setItem("i18nextLng", language);
 
