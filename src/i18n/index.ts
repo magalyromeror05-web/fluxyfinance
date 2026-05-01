@@ -35,6 +35,8 @@ i18n
       en: { translation: en },
     },
     fallbackLng: "pt-BR",
+    defaultNS: "translation",
+    ns: ["translation"],
     supportedLngs: [...supportedLanguages],
     nonExplicitSupportedLngs: true,
     load: "languageOnly",
